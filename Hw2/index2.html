@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diving Club - Courses</title>
+    <!-- FIX 1: Removed the leading slash from the CSS path -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="wrapper">
+        
+        <header>
+            <div class="inner-container header-content">
+                <div class="logo"><img src="images/logo.png" alt="Diving Club Logo"></div>
+                <nav class="nav">
+                    <!-- FIX 2: Removed the leading slashes from the HTML links -->
+                    <a href="index.html">Home</a>
+                    <a href="index2.html" class="active">Our courses</a>
+                    <a href="#">About</a>
+                    <a href="#">Contact</a>
+                </nav>
+            </div>
+        </header>
+
+        <section class="gallery inner-container">
+            <img src="images/course1.jpg" class="gallery-img-1" alt="Gear">
+            <img src="images/course2.jpg" class="gallery-img-2" alt="Coral">
+            <img src="images/course3.jpg" class="gallery-img-3" alt="Diver">
+        </section>
+
+        <section class="course-list inner-container">
+            <h2>List of Courses</h2>
+            
+            <div class="list-item">
+                <div class="rocket"></div>
+                
+                <div class="course-title">Open Water Certification</div>
+            </div>
+            <div class="list-item">
+                <div class="rocket"></div>
+                <div class="course-title">Advanced Open Water</div>
+            </div>
+            <div class="list-item">
+                <div class="rocket"></div>
+                <div class="course-title">Rescue Diver Course</div>
+            </div>
+            <div class="list-item">
+                <div class="rocket"></div>
+                <div class="course-title">Divemaster Training</div>
+            </div>
+        </section>
+
+        <section class="choice inner-container">
+            <h2>Your Choice</h2>
+            <!-- The new secondary headline -->
+            <h3>See what awaits you under the surface</h3>
+            
+            <div class="choice-box">
+                <!-- The embedded video element -->
+                <iframe 
+                    width="100%" 
+                    height="100%" 
+                    src="https://www.youtube.com/embed/rRR21XH2eOM" 
+                    title="Red Sea Diving Adventure" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="inner-container">
+                <div class="footer-columns">
+                    <div class="footer-col">
+                        <h4>WHO WE ARE</h4>
+                        <a href="#">About</a>
+                        <a href="#">Team</a>
+                        <a href="#">Work With Us</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4>FOLLOW US</h4>
+                        <a href="#">Twitter</a>
+                        <a href="#">Facebook</a>
+                        <a href="#">Instagram</a>
+                    </div>
+                </div>
+                <div class="socials">
+                    <!-- FIX 3: Removed the leading slashes from the footer images -->
+                    <a href="#"><img src="images/twitter.svg" alt="Twitter"></a>
+                    <a href="#"><img src="images/facebook.svg" alt="Facebook"></a>
+                    <a href="#"><img src="images/instagram.svg" alt="Instagram"></a>
+                </div>
+                <div class="copyright">
+                    &copy; 2024 DIVE CLUB
+                </div>
+            </div>
+        </footer>
+
+    </div>
+</body>
+</html>
