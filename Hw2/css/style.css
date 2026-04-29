@@ -41,12 +41,29 @@ body {
 .nav a {
     text-decoration: none; 
     color: #7b5c9e;
+    transition: color 0.2s ease-in-out; /* Optional: Makes the color change smooth */
 }
 
 .nav a.active {
     font-weight: bold;
     color: #4a148c;
 }
+
+/* --- THE NEW HOVER RULE --- */
+.nav a:hover {
+    font-weight: bold;
+    color: #4a148c; /* Darkens the text to match your 'active' tab color! */
+}
+
+/* .nav a {
+    text-decoration: none; 
+    color: #7b5c9e;
+}
+
+.nav a.active {
+    font-weight: bold;
+    color: #4a148c;
+} */
 
 .introduction {
     /* 1. STRETCH: Break out of the wrapper to stretch 100% of the screen width */
