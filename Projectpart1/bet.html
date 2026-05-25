@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Place Your Bet</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/data.js"></script>
+</head>
+<body>
+    <div class="mobile-container">
+        <div class="logo-area" style="margin-bottom: 10px;">
+            <img src="/images/logo.jpg" alt="Cup Logo" style="height: 60px;" onerror="this.style.display='none'">
+            <br>FIFA WORLD CUP
+        </div>
+        
+        <h2>Place your bet</h2>
+
+        <div class="carousel-wrapper">
+            <div class="arrow">&#9664;</div> <div class="grey-card" id="betCard" style="padding-bottom: 10px;">
+                </div>
+            
+            <div class="arrow">&#9654;</div>
+        </div>
+
+        <div class="bottom-buttons">
+            <button class="btn-grey" onclick="window.location.href='fixtures.html'">Cancel</button>
+            <button class="btn-green" style="margin-top: 0; padding: 10px 20px;">Place bet</button>
+        </div>
+
+        <div class="social-icons">
+            <span>📷</span> <span>🐦</span> <span>f</span>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const matchId = urlParams.get('id') || matchesData[0].id;
+        const match = matchesData.find(m => m.id === matchId);
+        let selectedOdds = match.odds.home;
+
+        const card = document.getElementById('betCard');
+        card.innerHTML = `
+            <h3>Match ${match.matchNum}</h3>
+            <div class="match-teams">
+                <div class="team-col">
+                    ${match.homeTeam}
+                    <img src="${match.homeFlag}" alt="${match.homeCode}" onerror="this.src='https://via.placeholder.com/50x35'">
+                </div>
+                <div class="vs">VS</div>
+                <div class="team-col">
+                    ${match.awayTeam}
+                    <img src="${match.awayFlag}" alt="${match.awayCode}" onerror="this.src='https://via.placeholder.com/50x35'">
+                </div>
+            </div>
+            <div class="match-date">${match.date}</div>
+            <div class="odds-container">
+                <div class="odd-box">${match.homeCode} - ${match.odds.home}</div>
+                <div class="odd-box">Draw - ${match.odds.draw}</div>
+                <div class="odd-box">${match.awayCode} - ${match.odds.away}</div>
+            </div>
+            
+            <div class="bet-selection">
+                Selection
+                <div class="bet-box">${match.homeTeam} Win</div>
+                Bet amount
+                <div class="bet-box">
+                    <input type="number" id="stakeInput" value="10" oninput="calculateWin()">$
+                </div>
+                Potential win
+                <div class="bet-box" id="potentialWin">${(10 * selectedOdds).toFixed(1)}$</div>
+            </div>
+        `;
+
+        function calculateWin() {
+            const stake = document.getElementById('stakeInput').value;
+            const winBox = document.getElementById('potentialWin');
+            if(stake && stake > 0) {
+                winBox.innerText = (stake * selectedOdds).toFixed(1) + '$';
+            } else {
+                winBox.innerText = '0$';
+            }
+        }
+    </script>
+</body>
+</html>
