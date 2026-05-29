@@ -7,26 +7,31 @@
 </head>
 <body>
     <div class="mobile-container">
+        <img src="/images/Menubutton.png" class="hamburger" alt="Menu">
         <div class="logo-area">
-            <img src="/images/logo.jpg" alt="Cup Logo" style="height: 60px;" onerror="this.style.display='none'">
-            <br>FIFA WORLD CUP
+            <img src="/images/logo.jpg" alt="Cup Logo" onerror="this.style.display='none'">
         </div>
         
-        <div class="form-container">
-            <input type="text" placeholder="Username">
-            <input type="email" placeholder="Email">
-            <input type="password" placeholder="Password">
-            <input type="password" placeholder="Confirm Password">
+        <div class="signup-form-container">
+            <input type="text" id="username" class="signup-input" placeholder="Username">
+            <input type="email" id="email" class="signup-input" placeholder="Email">
+            <input type="password" id="password" class="signup-input" placeholder="Password (Min. 8 characters)">
+            <input type="password" id="confirmPassword" class="signup-input" placeholder="Confirm Password">
             
-            <button class="btn-green" onclick="window.location.href='fixtures.html'">Sign Up</button>
+            <img src="/images/bigbutton.png" alt="Sign Up" style="width: 269px; height: auto; cursor: pointer;" onclick="handleSignup()">
+            
             <a href="#" class="text-link">Login</a>
+            
+            <div id="authMessage" style="display: none; padding: 10px; border-radius: 8px; text-align: center;"></div>
         </div>
 
         <div class="social-icons">
-            <img src="/images/instagram.svg" alt="IG" style="width: 20px; height: 20px;"> 
-            <img src="/images/twitter.svg" alt="Twitter" style="width: 20px; height: 20px;"> 
-            <img src="/images/facebook.svg" alt="FB" style="width: 20px; height: 20px;">
+            <img src="/images/instagram.svg" alt="IG" style="width: 26px; height: 28px;"> 
+            <img src="/images/twitter.svg" alt="Twitter" style="width: 26px; height: 28px;"> 
+            <img src="/images/facebook.svg" alt="FB" style="width: 26px; height: 28px;">
         </div>
     </div>
+
+    <script src="/js/auth.js"></script>
 </body>
 </html>

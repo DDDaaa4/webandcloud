@@ -7,28 +7,29 @@
 </head>
 <body>
     <div class="mobile-container">
-        <div class="logo-area" style="background: transparent;">
-            <img src="/images/logo.jpg" alt="FIFA WORLD CUP" style="height: 100px; max-width: 100px;">
+        <img src="/images/Menubutton.png" class="hamburger" alt="Menu">
+        <div class="logo-area">
+            <img src="/images/logo.jpg" alt="FIFA WORLD CUP">
         </div>
         
-        <h2>Featured Games</h2>
+        <div class="page-content">
+            <h2>Featured Games</h2>
 
-        <div class="carousel-wrapper">
-            <div class="arrow" onclick="prevMatch()">&#9664;</div>
-            
-            <div class="grey-card" id="fixtureCard">
-                <p style="text-align:center;">Loading JSON...</p>
+            <div class="carousel-wrapper">
+                <div class="arrow" onclick="prevMatch()">&#9664;</div>
+                <div class="grey-card" id="fixtureCard">
+                    <p style="text-align:center;">Loading JSON...</p>
+                </div>
+                <div class="arrow" onclick="nextMatch()">&#9654;</div>
             </div>
-            
-            <div class="arrow" onclick="nextMatch()">&#9654;</div>
+
+            <button class="btn-green" onclick="goToBet()">Place your bet</button>
         </div>
 
-        <button class="btn-green" style="width: 150px;" onclick="goToBet()">Place your bet</button>
-
         <div class="social-icons">
-            <img src="/images/instagram.svg" alt="IG" style="width: 20px; height: 20px;"> 
-            <img src="/images/twitter.svg" alt="Twitter" style="width: 20px; height: 20px;"> 
-            <img src="/images/facebook.svg" alt="FB" style="width: 20px; height: 20px;">
+            <img src="/images/instagram.svg" alt="IG" style="width: 26px; height: 28px;"> 
+            <img src="/images/twitter.svg" alt="Twitter" style="width: 26px; height: 28px;"> 
+            <img src="/images/facebook.svg" alt="FB" style="width: 26px; height: 28px;">
         </div>
     </div>
 
