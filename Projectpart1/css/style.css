@@ -1,4 +1,9 @@
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+    font-family: sans-serif; 
+}
 
 body {
     background-color: #11285C; 
@@ -9,7 +14,7 @@ body {
     min-height: 100vh;
 }
 
-/* Updated Layout Size */
+/* --- Mobile Screen Container --- */
 .mobile-container {
     width: 402px;
     height: 874px;
@@ -22,10 +27,10 @@ body {
     overflow-x: hidden;
 }
 
-/* Universal Header Elements (Hamburger & Logo) */
+/* --- Universal Header Elements (Hamburger & Logo) --- */
 .hamburger {
     position: absolute;
-    top: 25px;
+    top: 15px; 
     left: 20px;
     width: 42px;
     height: 40px;
@@ -39,7 +44,7 @@ body {
     display: flex;
     justify-content: center;
     position: absolute; 
-    top: 40px;
+    top: 10px; 
     z-index: 5;
 }
 
@@ -49,15 +54,44 @@ body {
     object-fit: contain;
 }
 
+/* --- Primary Figma Styled Buttons (Sign Up & Fixtures Page) --- */
+.btn-signup, .btn-green {
+    width: 269px;
+    height: 58px;
+    background-color: #33423B; 
+    color: #8C963B; 
+    border: 2px solid #1A261E; 
+    border-radius: 30px; /* Pill shape */
+    font-size: 28px;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+.btn-signup:hover, .btn-green:hover {
+    background-color: #2a3630;
+}
+
+
 /* --- Signup Page Specifics --- */
 .signup-form-container { 
     position: absolute;
-    top: 291px; 
+    top: 220px; 
     width: 269px; 
     display: flex; 
     flex-direction: column; 
-    gap: 30px; 
+    gap: 20px; 
     align-items: center;
+}
+
+.app-title {
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 5px;
 }
 
 .signup-input {
@@ -66,111 +100,135 @@ body {
     background-color: #D9D9D9; 
     border: none; 
     color: #333; 
-    font-size: 16px;
+    font-size: 28px; 
     text-align: center;
 }
 
-.signup-input::placeholder { color: #666; }
+.signup-input::placeholder { 
+    color: #666; 
+    font-size: 24px; 
+}
 
-/* Constrains validation alert to form size */
+.text-link { 
+    color: white; 
+    text-decoration: none; 
+    font-size: 32px; 
+    text-align: center; 
+    margin-top: 5px; 
+}
+
 #authMessage {
     width: 100%;
     box-sizing: border-box;
     word-wrap: break-word;
+    font-size: 16px;
+    z-index: 20;
 }
 
-/* --- Standard Page Content Wrapper --- */
+
 .page-content {
-    margin-top: 220px; /* Pushes content below the absolute header */
+    margin-top: 180px; 
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-h2 { font-weight: normal; margin-bottom: 15px; font-size: 20px; text-align: center;}
-.carousel-wrapper { display: flex; align-items: center; width: 100%; justify-content: space-between; margin-bottom: 15px;}
-.arrow { cursor: pointer; font-size: 24px; color: white; user-select: none; padding: 10px;}
+h2 { 
+    font-weight: normal; 
+    margin-bottom: 15px; 
+    font-size: 24px; 
+    text-align: center;
+}
 
+.carousel-wrapper { 
+    display: flex; 
+    align-items: center; 
+    width: 100%; 
+    justify-content: space-between; 
+    margin-bottom: 15px;
+}
+
+.arrow { 
+    cursor: pointer; 
+    font-size: 28px; 
+    color: white; 
+    user-select: none; 
+    padding: 10px;
+}
+
+/* --- Match Cards --- */
 .grey-card {
     background-color: #e0e0e0;
     color: black;
     width: 280px; 
-    padding: 20px 10px;
+    padding: 15px 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.grey-card h3 { font-weight: normal; margin-bottom: 15px; font-size: 16px;}
-.match-teams { display: flex; justify-content: space-between; width: 100%; align-items: center; margin-bottom: 15px;}
+.grey-card h3 { font-weight: normal; margin-bottom: 10px; font-size: 18px;}
+.match-teams { display: flex; justify-content: space-between; width: 100%; align-items: center; margin-bottom: 10px;}
 
-/* Interactive Flags */
 .team-col { 
     display: flex; flex-direction: column; align-items: center; 
-    font-size: 12px; width: 40%; cursor: pointer; transition: transform 0.2s;
+    font-size: 14px; width: 40%; cursor: pointer; transition: transform 0.2s;
 }
 .team-col:hover { transform: scale(1.05); }
-.team-col img { width: 60px; height: 40px; border: 1px solid #999; margin-top: 5px; object-fit: cover;}
+.team-col img { width: 70px; height: 45px; border: 1px solid #999; margin-top: 5px; object-fit: cover;}
 
-.vs { font-weight: normal; font-size: 14px; }
-.match-date { font-size: 12px; margin-bottom: 15px; }
+.vs { font-weight: normal; font-size: 16px; }
+.match-date { font-size: 12px; margin-bottom: 10px; }
 
+/* Match Odds Buttons */
 .odds-container { display: flex; gap: 8px; width: 100%; justify-content: center;}
-.odd-box { background-color: #c0c0c0; padding: 5px 10px; font-size: 12px; border: 1px solid #999; cursor: pointer;}
-.odd-box:hover { background-color: #999; }
+.odd-box { 
+    background-color: #c0c0c0; color: black; padding: 6px 8px; 
+    font-size: 12px; border: 1px solid #888; cursor: pointer; box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+.odd-box:hover { background-color: #a0a0a0; }
 
-/* Place Bet Figma Pills */
+
+/* --- Place Bet Figma Pills --- */
 .bet-pill-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    margin-top: 10px;
-    gap: 4px;
+    display: flex; flex-direction: column; align-items: center;
+    width: 100%; margin-top: 5px; gap: 2px;
 }
 .bet-label { font-size: 14px; color: #333; margin-top: 5px; }
+
 .bet-pill {
-    width: 200px;
-    height: 40px;
-    background-color: #C5C992; 
-    border: 1px solid #333;
-    border-radius: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 18px;
-    color: #000;
+    width: 200px; height: 35px; background-color: #C5C992; 
+    border: 1px solid #333; border-radius: 20px; display: flex;
+    justify-content: center; align-items: center; font-size: 18px; color: #000;
     box-shadow: 2px 2px 4px rgba(0,0,0,0.4);
 }
+
 .bet-pill input {
-    background: transparent;
-    border: none;
-    text-align: center;
-    font-size: 18px;
-    width: 100%;
-    height: 100%;
-    color: #000;
-    outline: none;
+    background: transparent; border: none; text-align: center;
+    font-size: 18px; width: 100%; height: 100%; color: #000; outline: none;
 }
 
-/* Buttons */
-.btn-green {
-    background-color: #A2AA27; color: black; border: 2px solid #2d452d;
-    padding: 12px; border-radius: 25px; font-size: 16px; cursor: pointer;
-    text-align: center; width: 150px;
+/* --- Place Bet Bottom Buttons --- */
+.bet-bottom-buttons { 
+    display: flex; gap: 20px; margin-top: 15px; justify-content: center; width: 100%; 
 }
 
-.bet-bottom-buttons {
-    display: flex; gap: 20px; margin-top: 20px; justify-content: center; width: 100%;
-}
 .btn-cancel, .btn-place {
     color: black; border: 2px solid #2d452d; padding: 10px 20px;
     border-radius: 20px; width: 120px; font-size: 16px; cursor: pointer;
     box-shadow: 2px 2px 4px rgba(0,0,0,0.4);
 }
+
 .btn-cancel { background-color: #5B708A; }
 .btn-place { background-color: #4A6350; }
 
-.text-link { color: white; text-decoration: none; font-size: 14px; text-align: center; }
-.social-icons { position: absolute; bottom: 30px; display: flex; gap: 40px; justify-content: center; width: 100%;}
+/* --- Footer --- */
+.social-icons { 
+    position: absolute; 
+    bottom: 20px; 
+    display: flex; 
+    gap: 40px; 
+    justify-content: center; 
+    width: 100%;
+}

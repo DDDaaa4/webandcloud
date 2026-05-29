@@ -11,13 +11,8 @@ window.onload = () => {
         .then(data => {
             matchesData = data;
             
-            // Check which page we are on and render accordingly
-            if (document.getElementById('fixtureCard')) {
-                renderMatch();
-            }
-            if (document.getElementById('betCard')) {
-                renderBetPage();
-            }
+            if (document.getElementById('fixtureCard')) renderMatch();
+            if (document.getElementById('betCard')) renderBetPage();
         })
         .catch(err => {
             console.error(err);
@@ -74,49 +69,63 @@ function renderBetPage() {
     const matchId = urlParams.get('id') || matchesData[0].id;
     const match = matchesData.find(m => m.id === matchId);
     
-    // Store odds globally for the calculate tool
+    // Store defaults globally for the calculate tool
     window.selectedOdds = match.odds.home;
+    window.selectedTeam = match.homeTeam;
 
     const card = document.getElementById('betCard');
+    
+    // Inject the exact Figma-styled pills layout
     card.innerHTML = `
         <h3>Match ${match.matchNum}</h3>
         <div class="match-teams">
-            <div class="team-col">
+            <div class="team-col" onclick="selectTeam('${match.homeTeam}', ${match.odds.home})">
                 ${match.homeTeam}
                 <img src="${match.homeFlag}" alt="${match.homeCode}" onerror="this.style.display='none'">
             </div>
             <div class="vs">VS</div>
-            <div class="team-col">
+            <div class="team-col" onclick="selectTeam('${match.awayTeam}', ${match.odds.away})">
                 ${match.awayTeam}
                 <img src="${match.awayFlag}" alt="${match.awayCode}" onerror="this.style.display='none'">
             </div>
         </div>
         <div class="match-date">${match.date}</div>
         <div class="odds-container">
-            <div class="odd-box">${match.homeCode} - ${match.odds.home}</div>
-            <div class="odd-box">Draw - ${match.odds.draw}</div>
-            <div class="odd-box">${match.awayCode} - ${match.odds.away}</div>
+            <div class="odd-box" onclick="selectTeam('${match.homeTeam}', ${match.odds.home})">${match.homeCode} - ${match.odds.home}</div>
+            <div class="odd-box" onclick="selectTeam('Draw', ${match.odds.draw})">Draw - ${match.odds.draw}</div>
+            <div class="odd-box" onclick="selectTeam('${match.awayTeam}', ${match.odds.away})">${match.awayCode} - ${match.odds.away}</div>
         </div>
         
-        <div class="bet-selection">
-            Selection
-            <div class="bet-box">${match.homeTeam} Win</div>
-            Bet amount
-            <div class="bet-box">
-                <input type="number" id="stakeInput" value="10" oninput="calculateWin()">$
+        <div class="bet-pill-container">
+            <div class="bet-label">Selection</div>
+            <div class="bet-pill" id="selectionLabel">${match.homeTeam} Win</div>
+            
+            <div class="bet-label">Bet amount</div>
+            <div class="bet-pill">
+                <input type="text" id="stakeInput" value="10$" oninput="calculateWin()">
             </div>
-            Potential win
-            <div class="bet-box" id="potentialWin">${(10 * window.selectedOdds).toFixed(1)}$</div>
+            
+            <div class="bet-label">Potential win</div>
+            <div class="bet-pill" id="potentialWin">${(10 * window.selectedOdds).toFixed(1)}$</div>
         </div>
     `;
 }
 
-function calculateWin() {
-    const stake = document.getElementById('stakeInput').value;
+// Function triggered when flag or odd is clicked
+window.selectTeam = function(teamName, odds) {
+    window.selectedOdds = odds;
+    document.getElementById('selectionLabel').innerText = teamName === 'Draw' ? 'Draw' : teamName + ' Win';
+    calculateWin(); // Auto-recalculate
+};
+
+// Function triggered when typing in input
+window.calculateWin = function() {
+    let val = document.getElementById('stakeInput').value.replace('$', '');
+    const stake = parseFloat(val);
     const winBox = document.getElementById('potentialWin');
     if(stake && stake > 0) {
         winBox.innerText = (stake * window.selectedOdds).toFixed(1) + '$';
     } else {
         winBox.innerText = '0$';
     }
-}
+};
