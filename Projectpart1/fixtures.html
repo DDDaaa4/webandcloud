@@ -3,36 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <title>Featured Games</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
     <div class="mobile-container">
-        <img src="/images/Menubutton.png" class="hamburger" alt="Menu">
+        <img src="./images/Menubutton.png" class="hamburger" alt="Menu">
+        
+        <div class="cart-container">
+            <img src="./images/cart.png" class="cart-icon" alt="Cart">
+            <div class="cart-badge" id="cartBadge" style="display: none;">0</div>
+        </div>
+
         <div class="logo-area">
-            <img src="/images/logo.jpg" alt="FIFA WORLD CUP">
+            <img src="./images/logo.jpg" alt="FIFA WORLD CUP">
         </div>
         
-        <div class="page-content">
-            <h2>Featured Games</h2>
+        <h2 class="page-title">Featured Games</h2>
 
-            <div class="carousel-wrapper">
-                <div class="arrow" onclick="prevMatch()">&#9664;</div>
-                <div class="grey-card" id="fixtureCard">
-                    <p style="text-align:center;">Loading JSON...</p>
-                </div>
-                <div class="arrow" onclick="nextMatch()">&#9654;</div>
-            </div>
-
-            <button class="btn-green" onclick="goToBet()">Place your bet</button>
+        <div class="carousel-wrapper">
+            <div class="arrow arrow-left" onclick="prevMatch()">&#9664;</div>
+            <div class="grey-card" id="fixtureCard"></div>
+            <div class="arrow arrow-right" onclick="nextMatch()">&#9654;</div>
         </div>
 
+        <button class="btn-place-fixtures" onclick="goToBet()">Place your bet</button>
+
         <div class="social-icons">
-            <img src="/images/instagram.svg" alt="IG" style="width: 26px; height: 28px;"> 
-            <img src="/images/twitter.svg" alt="Twitter" style="width: 26px; height: 28px;"> 
-            <img src="/images/facebook.svg" alt="FB" style="width: 26px; height: 28px;">
+            <img src="./images/instagram.svg" alt="IG" style="width: 26px; height: 28px;"> 
+            <img src="./images/twitter.svg" alt="Twitter" style="width: 26px; height: 28px;"> 
+            <img src="./images/facebook.svg" alt="FB" style="width: 26px; height: 28px;">
         </div>
     </div>
 
-    <script src="/js/app.js"></script>
+    <script src="./js/app.js"></script>
 </body>
 </html>

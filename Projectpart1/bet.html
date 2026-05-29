@@ -3,39 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <title>Place Your Bet</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
     <div class="mobile-container">
-        <img src="/images/Menubutton.png" class="hamburger" alt="Menu">
+        <img src="./images/Menubutton.png" class="hamburger" alt="Menu">
+        
+        <div class="cart-container">
+            <img src="./images/cart.png" class="cart-icon" alt="Cart">
+            <div class="cart-badge" id="cartBadge" style="display: none;">0</div>
+        </div>
+
         <div class="logo-area">
-            <img src="/images/logo.jpg" alt="Cup Logo" onerror="this.style.display='none'">
+            <img src="./images/logo.jpg" alt="Cup Logo" onerror="this.style.display='none'">
         </div>
         
-        <div class="page-content">
-            <h2>Place your bet</h2>
+        <h2 class="page-title">Place your bet</h2>
 
-            <div class="carousel-wrapper">
-                <div class="arrow">&#9664;</div> 
-                <div class="grey-card" id="betCard" style="padding-bottom: 20px;">
-                    <p style="text-align:center;">Loading JSON...</p>
+        <div class="carousel-wrapper">
+            <div class="arrow arrow-left">&#9664;</div> 
+            <div class="grey-card" id="betCard"></div>
+            <div class="arrow arrow-right">&#9654;</div>
+        </div>
+
+        <div class="bet-bottom-buttons">
+            <button class="btn-cancel" onclick="window.location.href='fixtures.html'">Cancel</button>
+            <button class="btn-place" onclick="addToCart()">Place bet</button>
+        </div>
+
+        <div class="popup-overlay" id="betPopup">
+            <div class="popup-content">
+                <p>do you wish to add more bets?</p>
+                <div class="popup-buttons">
+                    <button class="popup-btn btn-yes" onclick="window.location.href='fixtures.html'">Yes</button>
+                    <button class="popup-btn btn-no" onclick="closePopup()">No</button>
                 </div>
-                <div class="arrow">&#9654;</div>
-            </div>
-
-            <div class="bet-bottom-buttons">
-                <button class="btn-cancel" onclick="window.location.href='fixtures.html'">Cancel</button>
-                <button class="btn-place">Place bet</button>
             </div>
         </div>
 
         <div class="social-icons">
-            <img src="/images/instagram.svg" alt="IG" style="width: 26px; height: 28px;"> 
-            <img src="/images/twitter.svg" alt="Twitter" style="width: 26px; height: 28px;"> 
-            <img src="/images/facebook.svg" alt="FB" style="width: 26px; height: 28px;">
+            <img src="./images/instagram.svg" alt="IG" style="width: 26px; height: 28px;"> 
+            <img src="./images/twitter.svg" alt="Twitter" style="width: 26px; height: 28px;"> 
+            <img src="./images/facebook.svg" alt="FB" style="width: 26px; height: 28px;">
         </div>
     </div>
 
-    <script src="/js/app.js"></script>
+    <script src="./js/app.js"></script>
 </body>
 </html>

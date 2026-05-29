@@ -1,8 +1,21 @@
 let matchesData = [];
 let currentIndex = 0;
 
-// On load, fetch the data
+window.updateCartBadge = function() {
+    const badge = document.getElementById('cartBadge');
+    if (badge) {
+        let count = parseInt(localStorage.getItem('cartCount') || '0');
+        if (count > 0) {
+            badge.style.display = 'flex';
+            badge.innerText = count;
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+};
+
 window.onload = () => {
+    updateCartBadge();
     fetch('./data/fixtures.json')
         .then(response => {
             if (!response.ok) throw new Error("Could not load fixtures.json");
@@ -10,16 +23,11 @@ window.onload = () => {
         })
         .then(data => {
             matchesData = data;
-            
             if (document.getElementById('fixtureCard')) renderMatch();
             if (document.getElementById('betCard')) renderBetPage();
         })
         .catch(err => {
             console.error(err);
-            const card = document.getElementById('fixtureCard') || document.getElementById('betCard');
-            if (card) {
-                card.innerHTML = `<p style="color:red; text-align:center;">Error loading match data.</p>`;
-            }
         });
 };
 
@@ -30,16 +38,14 @@ function renderMatch() {
     
     card.innerHTML = `
         <h3>Match ${match.matchNum}</h3>
-        <div class="match-teams">
-            <div class="team-col">
-                ${match.homeTeam}
-                <img src="${match.homeFlag}" alt="${match.homeCode}" onerror="this.style.display='none'">
-            </div>
-            <div class="vs">VS</div>
-            <div class="team-col">
-                ${match.awayTeam}
-                <img src="${match.awayFlag}" alt="${match.awayCode}" onerror="this.style.display='none'">
-            </div>
+        <div class="team-col team-home">
+            ${match.homeTeam}
+            <img src="${match.homeFlag}" alt="${match.homeCode}" onerror="this.style.display='none'">
+        </div>
+        <div class="vs">VS</div>
+        <div class="team-col team-away">
+            ${match.awayTeam}
+            <img src="${match.awayFlag}" alt="${match.awayCode}" onerror="this.style.display='none'">
         </div>
         <div class="match-date">${match.date}</div>
         <div class="odds-container">
@@ -53,15 +59,11 @@ function renderMatch() {
 function nextMatch() {
     if (currentIndex < matchesData.length - 1) { currentIndex++; renderMatch(); }
 }
-
 function prevMatch() {
     if (currentIndex > 0) { currentIndex--; renderMatch(); }
 }
-
 function goToBet() {
-    if (matchesData.length > 0) {
-        window.location.href = `bet.html?id=${matchesData[currentIndex].id}`;
-    }
+    if (matchesData.length > 0) { window.location.href = `bet.html?id=${matchesData[currentIndex].id}`; }
 }
 
 function renderBetPage() {
@@ -69,26 +71,23 @@ function renderBetPage() {
     const matchId = urlParams.get('id') || matchesData[0].id;
     const match = matchesData.find(m => m.id === matchId);
     
-    // Store defaults globally for the calculate tool
     window.selectedOdds = match.odds.home;
     window.selectedTeam = match.homeTeam;
 
     const card = document.getElementById('betCard');
-    
-    // Inject the exact Figma-styled pills layout
     card.innerHTML = `
         <h3>Match ${match.matchNum}</h3>
-        <div class="match-teams">
-            <div class="team-col" onclick="selectTeam('${match.homeTeam}', ${match.odds.home})">
-                ${match.homeTeam}
-                <img src="${match.homeFlag}" alt="${match.homeCode}" onerror="this.style.display='none'">
-            </div>
-            <div class="vs">VS</div>
-            <div class="team-col" onclick="selectTeam('${match.awayTeam}', ${match.odds.away})">
-                ${match.awayTeam}
-                <img src="${match.awayFlag}" alt="${match.awayCode}" onerror="this.style.display='none'">
-            </div>
+        
+        <div class="team-col team-home" onclick="selectTeam('${match.homeTeam}', ${match.odds.home})">
+            ${match.homeTeam}
+            <img src="${match.homeFlag}" alt="${match.homeCode}" onerror="this.style.display='none'">
         </div>
+        <div class="vs">VS</div>
+        <div class="team-col team-away" onclick="selectTeam('${match.awayTeam}', ${match.odds.away})">
+            ${match.awayTeam}
+            <img src="${match.awayFlag}" alt="${match.awayCode}" onerror="this.style.display='none'">
+        </div>
+        
         <div class="match-date">${match.date}</div>
         <div class="odds-container">
             <div class="odd-box" onclick="selectTeam('${match.homeTeam}', ${match.odds.home})">${match.homeCode} - ${match.odds.home}</div>
@@ -111,14 +110,12 @@ function renderBetPage() {
     `;
 }
 
-// Function triggered when flag or odd is clicked
 window.selectTeam = function(teamName, odds) {
     window.selectedOdds = odds;
     document.getElementById('selectionLabel').innerText = teamName === 'Draw' ? 'Draw' : teamName + ' Win';
-    calculateWin(); // Auto-recalculate
+    calculateWin(); 
 };
 
-// Function triggered when typing in input
 window.calculateWin = function() {
     let val = document.getElementById('stakeInput').value.replace('$', '');
     const stake = parseFloat(val);
@@ -128,4 +125,18 @@ window.calculateWin = function() {
     } else {
         winBox.innerText = '0$';
     }
+};
+
+window.addToCart = function() {
+    let count = parseInt(localStorage.getItem('cartCount') || '0');
+    count++;
+    localStorage.setItem('cartCount', count);
+    updateCartBadge();
+    const popup = document.getElementById('betPopup');
+    if (popup) popup.style.display = 'flex';
+};
+
+window.closePopup = function() {
+    const popup = document.getElementById('betPopup');
+    if (popup) popup.style.display = 'none';
 };
