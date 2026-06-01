@@ -268,3 +268,25 @@ body {
 .side-menu a:hover {
     background-color: #c5c992;
 }
+
+.social-icons img {
+    width: 26px;
+    height: 28px;
+    cursor: pointer;
+}
+
+.social-icons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-icons a:hover {
+    transform: scale(1.2);
+    opacity: 0.8;
+    filter: brightness(0) invert(1);
+}
+
+.social-icons a:active {
+    transform: scale(0.95);
+}
