@@ -69,10 +69,17 @@ function renderMatch() {
 }
 
 function nextMatch() {
-    if (currentIndex < matchesData.length - 1) { currentIndex++; renderMatch(); }
+    if (matchesData.length === 0) return;
+
+    currentIndex = (currentIndex + 1) % matchesData.length;
+    renderMatch();
 }
+
 function prevMatch() {
-    if (currentIndex > 0) { currentIndex--; renderMatch(); }
+    if (matchesData.length === 0) return;
+
+    currentIndex = (currentIndex - 1 + matchesData.length) % matchesData.length;
+    renderMatch();
 }
 function goToBet() {
     if (matchesData.length > 0) { window.location.href = `bet.html?id=${matchesData[currentIndex].id}`; }
@@ -81,7 +88,7 @@ function goToBet() {
 function renderBetPage() {
     const urlParams = new URLSearchParams(window.location.search);
     const matchId = urlParams.get('id') || matchesData[0].id;
-    const match = matchesData.find(m => m.id === matchId);
+    const match = matchesData.find(m => m.id === matchId) || matchesData[0];
     
     window.selectedOdds = match.odds.home;
     window.selectedTeam = match.homeTeam;
