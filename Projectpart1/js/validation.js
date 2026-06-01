@@ -51,8 +51,8 @@ function handleSignup() {
     msgBox.style.border = '1px solid #4ade80';
     msgBox.innerText = 'Success! Account created. Redirecting...';
 
-    // Redirect to fixtures after 1.5 seconds
+    // Redirect to features after 1.5 seconds
     setTimeout(() => {
-        window.location.href = 'fixtures.html';
+        window.location.href = 'features.html';
     }, 1500);
 }

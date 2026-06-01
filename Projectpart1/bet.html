@@ -7,7 +7,14 @@
 </head>
 <body>
     <div class="mobile-container">
-        <img src="./images/Menubutton.png" class="hamburger" alt="Menu">
+        <!--<img src="./images/Menubutton.png" class="hamburger" alt="Menu">-->
+        <img src="./images/Menubutton.png" class="hamburger" alt="Menu" onclick="toggleMenu()">
+
+        <nav class="side-menu" id="sideMenu">
+            <a href="signup.html">Sign Up</a>
+            <a href="features.html">Featured Games</a>
+            <a href="bet.html">Place Your Bet</a>
+        </nav>
         
         <div class="cart-container">
             <img src="./images/cart.jpg" class="cart-icon" alt="Cart">
@@ -27,7 +34,7 @@
         </div>
 
         <div class="bet-bottom-buttons">
-            <button class="btn-cancel" onclick="window.location.href='fixtures.html'">Cancel</button>
+            <button class="btn-cancel" onclick="window.location.href='features.html'">Cancel</button>
             <button class="btn-place" onclick="addToCart()">Place bet</button>
         </div>
 
@@ -35,7 +42,7 @@
             <div class="popup-content">
                 <p>do you wish to add more bets?</p>
                 <div class="popup-buttons">
-                    <button class="popup-btn btn-yes" onclick="window.location.href='fixtures.html'">Yes</button>
+                    <button class="popup-btn btn-yes" onclick="window.location.href='features.html'">Yes</button>
                     <button class="popup-btn btn-no" onclick="closePopup()">No</button>
                 </div>
             </div>

@@ -16,14 +16,14 @@ window.updateCartBadge = function() {
 
 window.onload = () => {
     updateCartBadge();
-    fetch('./data/fixtures.json')
+    fetch('./data/features.json')
         .then(response => {
-            if (!response.ok) throw new Error("Could not load fixtures.json");
+            if (!response.ok) throw new Error("Could not load features.json");
             return response.json();
         })
         .then(data => {
             matchesData = data;
-            if (document.getElementById('fixtureCard')) renderMatch();
+            if (document.getElementById('featureCard')) renderMatch();
             if (document.getElementById('betCard')) renderBetPage();
         })
         .catch(err => {
@@ -31,10 +31,22 @@ window.onload = () => {
         });
 };
 
+window.toggleMenu = function() {
+    const menu = document.getElementById('sideMenu');
+
+    if (!menu) return;
+
+    if (menu.style.display === 'flex') {
+        menu.style.display = 'none';
+    } else {
+        menu.style.display = 'flex';
+    }
+};
+
 function renderMatch() {
     if (matchesData.length === 0) return;
     const match = matchesData[currentIndex];
-    const card = document.getElementById('fixtureCard');
+    const card = document.getElementById('featureCard');
     
     card.innerHTML = `
         <h3>Match ${match.matchNum}</h3>

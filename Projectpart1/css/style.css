@@ -112,7 +112,7 @@ body {
     position: relative; 
 }
 
-#fixtureCard { height: 325px; }
+#featureCard { height: 325px; }
 #betCard { height: 465px; } 
 
 /* --- Inside the Card: Exact Flag Positioning --- */
@@ -197,7 +197,7 @@ body {
 }
 
 /* --- Buttons --- */
-.btn-place-fixtures {
+.btn-place-features {
     position: absolute;
     top: 610px; 
     width: 269px; height: 58px;
@@ -238,3 +238,33 @@ body {
 .popup-btn { padding: 10px 20px; border: 2px solid #2d452d; border-radius: 20px; font-size: 18px; width: 100px; cursor: pointer;}
 .btn-yes { background-color: #4A6350; }
 .btn-no { background-color: #5B708A; }
+
+.side-menu {
+    position: absolute;
+    top: 60px;
+    left: 15px;
+    width: 180px;
+    background-color: #e0e0e0;
+    border: 2px solid #000;
+    border-radius: 10px;
+    display: none;
+    flex-direction: column;
+    z-index: 50;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.side-menu a {
+    color: black;
+    text-decoration: none;
+    padding: 12px 15px;
+    font-size: 16px;
+    border-bottom: 1px solid #999;
+}
+
+.side-menu a:last-child {
+    border-bottom: none;
+}
+
+.side-menu a:hover {
+    background-color: #c5c992;
+}

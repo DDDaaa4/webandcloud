@@ -42,8 +42,8 @@ function handleSignup() {
     msgBox.style.border = '1px solid #4ade80';
     msgBox.innerText = 'Success! Account created. Redirecting...';
 
-    // Simulate network delay, then redirect to fixtures page
+    // Simulate network delay, then redirect to features page
     setTimeout(() => {
-        window.location.href = 'fixtures.html';
+        window.location.href = 'features.html';
     }, 1500);
 }
