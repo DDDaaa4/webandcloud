@@ -113,7 +113,7 @@ function renderBetPage() {
             
             <div class="bet-label">Bet amount</div>
             <div class="bet-pill">
-                <input type="text" id="stakeInput" value="10$" oninput="calculateWin()">
+                <input type="text" id="stakeInput" value="10$" oninput="validateStakeInput()">
             </div>
             
             <div class="bet-label">Potential win</div>
@@ -128,11 +128,45 @@ window.selectTeam = function(teamName, odds) {
     calculateWin(); 
 };
 
+window.validateStakeInput = function() {
+    const input = document.getElementById('stakeInput');
+    if (!input) return;
+
+    let value = input.value;
+
+    // Allow only numbers, dot, and dollar sign
+    value = value.replace(/[^0-9.$]/g, '');
+
+    // Keep only the first dot
+    const firstDotIndex = value.indexOf('.');
+    if (firstDotIndex !== -1) {
+        value =
+            value.slice(0, firstDotIndex + 1) +
+            value.slice(firstDotIndex + 1).replace(/\./g, '');
+    }
+
+    // Keep only one dollar sign, always at the end
+    const hasDollar = value.includes('$');
+    value = value.replace(/\$/g, '');
+
+    if (hasDollar) {
+        value = value + '$';
+    }
+
+    input.value = value;
+    calculateWin();
+};
+
 window.calculateWin = function() {
-    let val = document.getElementById('stakeInput').value.replace('$', '');
-    const stake = parseFloat(val);
+    const input = document.getElementById('stakeInput');
     const winBox = document.getElementById('potentialWin');
-    if(stake && stake > 0) {
+
+    if (!input || !winBox) return;
+
+    const cleanValue = input.value.replace('$', '');
+    const stake = parseFloat(cleanValue);
+
+    if (!isNaN(stake) && stake > 0) {
         winBox.innerText = (stake * window.selectedOdds).toFixed(1) + '$';
     } else {
         winBox.innerText = '0$';

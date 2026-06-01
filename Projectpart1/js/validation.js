@@ -1,5 +1,5 @@
 // Automatically reset cart on load for the signup page (new session)
-window.onload = function() {
+window.addEventListener('load', function() {
     // 1. Reset the cart memory to 0
     localStorage.setItem('cartCount', '0');
     
@@ -9,7 +9,7 @@ window.onload = function() {
         badge.style.display = 'none';
         badge.innerText = '0';
     }
-};
+});
 
 function handleSignup() {
     const username = document.getElementById('username').value.trim();
