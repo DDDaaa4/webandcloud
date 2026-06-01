@@ -1,5 +1,5 @@
 // Automatically reset cart on load for the signup page (new session)
-window.onload = function() {
+window.addEventListener('load', function() {
     // 1. Reset the cart memory to 0
     localStorage.setItem('cartCount', '0');
     
@@ -9,7 +9,7 @@ window.onload = function() {
         badge.style.display = 'none';
         badge.innerText = '0';
     }
-};
+});
 
 function handleSignup() {
     const username = document.getElementById('username').value.trim();
@@ -51,8 +51,8 @@ function handleSignup() {
     msgBox.style.border = '1px solid #4ade80';
     msgBox.innerText = 'Success! Account created. Redirecting...';
 
-    // Redirect to fixtures after 1.5 seconds
+    // Redirect to features after 1.5 seconds
     setTimeout(() => {
-        window.location.href = 'fixtures.html';
+        window.location.href = 'features.html';
     }, 1500);
 }
