@@ -458,14 +458,30 @@ body {
 
 .social-icons a {
     pointer-events: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .social-icons img {
     width: 21px;
     height: 21px;
     opacity: 0.8;
+    transition: filter 0.2s ease, opacity 0.2s ease;
 }
 
+.social-icons a:hover {
+    background-color: rgba(255, 255, 255, 0.14);
+    transform: translateY(-2px);
+}
+
+.social-icons a:hover img {
+    filter: brightness(0) invert(1);
+    opacity: 1;
+}
 .hidden {
     display: none !important;
 }
