@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div class="mobile-container">
+        <img src="./images/MenuButton.png" class="hamburger" alt="Menu" onclick="toggleMenu()">
+        <a href="leaderboard.html" class="header-icon" aria-label="Leaderboard">🏆</a>
+        <nav class="side-menu" id="sideMenu">
+            <a href="index.html">Home</a>
+            <a href="signup.html">Sign Up</a>
+            <a href="features.html">Featured Matches</a>
+            <a href="my-predictions.html">My Predictions</a>
+            <a href="leaderboard.html">Leaderboard</a>
+        </nav>
+
+        <div class="logo-area">
+            <img src="./images/logo.jpg" alt="FIFA World Cup logo">
+        </div>
+
+        <div class="form-container">
+            <h1 class="app-title">Login</h1>
+            <input type="email" id="loginEmail" class="input" placeholder="Email" autocomplete="email">
+            <input type="password" id="loginPassword" class="input" placeholder="Password" autocomplete="current-password">
+            <button class="btn-signup" onclick="handleLogin()">Login</button>
+            <a href="signup.html" class="text-link">Need an account? Sign up</a>
+            <div id="authMessage" class="message"></div>
+        </div>
+
+        <div class="social-icons">
+            <a href="https://www.instagram.com/fifaworldcup" target="_blank" rel="noopener noreferrer"><img src="./images/instagram.svg" alt="Instagram"></a>
+            <a href="https://twitter.com/FIFAWorldCup" target="_blank" rel="noopener noreferrer"><img src="./images/twitter.svg" alt="Twitter"></a>
+            <a href="https://www.facebook.com/fifaworldcup" target="_blank" rel="noopener noreferrer"><img src="./images/facebook.svg" alt="Facebook"></a>
+        </div>
+    </div>
+
+    <script src="./js/api.js"></script>
+    <script src="./js/menu.js"></script>
+    <script src="./js/auth.js"></script>
+</body>
+</html>

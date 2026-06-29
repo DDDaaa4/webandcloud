@@ -1,0 +1,171 @@
+{
+  "info": {
+    "name": "World Cup Prediction API",
+    "description": "Postman collection for Project Part B. Set baseUrl to http://localhost:5000 and token after login/register.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000" },
+    { "key": "token", "value": "" },
+    { "key": "matchId", "value": "" },
+    { "key": "predictionId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/health",
+        "description": "Checks that the server is running. Success response: { status: 'ok' }."
+      }
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"Basel\",\n  \"email\": \"basel@example.com\",\n  \"password\": \"12345678\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/register",
+            "description": "Creates a user. Success: 201 with token and user. Error: 409 if email already exists."
+          }
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"basel@example.com\",\n  \"password\": \"12345678\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/login",
+            "description": "Logs in a user. Copy the returned token into the token collection variable."
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/auth/me",
+            "description": "Protected route. Success returns the current user. Error: 401 without token."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Matches",
+      "item": [
+        {
+          "name": "Get All Matches",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/matches",
+            "description": "Returns all matches from the database."
+          }
+        },
+        {
+          "name": "Filter Matches By Team",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/matches?team=Mexico",
+            "description": "Complex query example: search by team name."
+          }
+        },
+        {
+          "name": "Filter Matches By Status",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/matches?status=upcoming",
+            "description": "Complex query example: filter by match status."
+          }
+        },
+        {
+          "name": "Get Match By ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/matches/{{matchId}}",
+            "description": "Returns one match. Error: 404 if the match does not exist."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Predictions CRUD",
+      "item": [
+        {
+          "name": "Create Prediction",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": \"{{matchId}}\",\n  \"selectedResult\": \"home\",\n  \"confidencePoints\": 5\n}"
+            },
+            "url": "{{baseUrl}}/api/predictions",
+            "description": "Creates a prediction for the logged-in user. Error: 409 if prediction already exists for the same match."
+          }
+        },
+        {
+          "name": "Read My Predictions",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/predictions/mine",
+            "description": "Returns predictions of the logged-in user."
+          }
+        },
+        {
+          "name": "Update Prediction",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"selectedResult\": \"away\",\n  \"confidencePoints\": 7\n}"
+            },
+            "url": "{{baseUrl}}/api/predictions/{{predictionId}}",
+            "description": "Updates an existing prediction. Error: 404 if it does not belong to the logged-in user."
+          }
+        },
+        {
+          "name": "Delete Prediction",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/predictions/{{predictionId}}",
+            "description": "Deletes an existing prediction."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Leaderboard",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/leaderboard",
+        "description": "Complex aggregation query: calculates users ordered by prediction confidence points."
+      }
+    },
+    {
+      "name": "External API - Country Info",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/external/country/Mexico",
+        "description": "Uses an external public API through the backend to return country/team information."
+      }
+    }
+  ]
+}

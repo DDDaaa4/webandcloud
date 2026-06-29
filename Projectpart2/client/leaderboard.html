@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div class="mobile-container">
+        <img src="./images/MenuButton.png" class="hamburger" alt="Menu" onclick="toggleMenu()">
+        <a href="features.html" class="header-icon" aria-label="Matches">⚽</a>
+        <nav class="side-menu" id="sideMenu">
+            <a href="index.html">Home</a>
+            <a href="features.html">Featured Matches</a>
+            <a href="my-predictions.html">My Predictions</a>
+            <button type="button" onclick="logoutUser()">Logout</button>
+        </nav>
+
+        <div class="logo-area">
+            <img src="./images/logo.jpg" alt="FIFA World Cup logo">
+        </div>
+
+        <h1 class="page-title">Leaderboard</h1>
+        <div id="messageBox" class="message"></div>
+        <div id="leaderboardList" class="cards-list"></div>
+        <div class="chart-wrap">
+            <canvas id="leaderboardChart" height="190"></canvas>
+        </div>
+
+        <div class="social-icons">
+            <a href="https://www.instagram.com/fifaworldcup" target="_blank" rel="noopener noreferrer"><img src="./images/instagram.svg" alt="Instagram"></a>
+            <a href="https://twitter.com/FIFAWorldCup" target="_blank" rel="noopener noreferrer"><img src="./images/twitter.svg" alt="Twitter"></a>
+            <a href="https://www.facebook.com/fifaworldcup" target="_blank" rel="noopener noreferrer"><img src="./images/facebook.svg" alt="Facebook"></a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./js/api.js"></script>
+    <script src="./js/menu.js"></script>
+    <script src="./js/leaderboard.js"></script>
+</body>
+</html>
