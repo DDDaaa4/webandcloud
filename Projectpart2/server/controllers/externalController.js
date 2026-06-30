@@ -1,19 +1,34 @@
-const countryNameMap = {
-    USA: 'United States',
-    'United States': 'United States',
-    'South Korea': 'South Korea',
-    Türkiye: 'Turkey',
-    Turkiye: 'Turkey',
-    Turkey: 'Turkey',
-    Curacao: 'Curacao',
-    'IR Iran': 'Iran',
-    Iran: 'Iran',
-    'Congo DR': 'Democratic Republic of the Congo',
-    'Cote d\'Ivoire': 'Ivory Coast',
-    'Ivory Coast': 'Ivory Coast'
+const countryDataMap = {
+    Mexico: { capital: 'Mexico City', countryCode: 'MX' },
+    'South Africa': { capital: 'Pretoria', countryCode: 'ZA' },
+    Japan: { capital: 'Tokyo', countryCode: 'JP' },
+    Netherlands: { capital: 'Amsterdam', countryCode: 'NL' },
+    Canada: { capital: 'Ottawa', countryCode: 'CA' },
+    Brazil: { capital: 'Brasilia', countryCode: 'BR' },
+    Germany: { capital: 'Berlin', countryCode: 'DE' },
+    France: { capital: 'Paris', countryCode: 'FR' },
+    Spain: { capital: 'Madrid', countryCode: 'ES' },
+    England: { capital: 'London', countryCode: 'GB' },
+    Portugal: { capital: 'Lisbon', countryCode: 'PT' },
+    Argentina: { capital: 'Buenos Aires', countryCode: 'AR' },
+    Croatia: { capital: 'Zagreb', countryCode: 'HR' },
+    Morocco: { capital: 'Rabat', countryCode: 'MA' },
+    Sweden: { capital: 'Stockholm', countryCode: 'SE' },
+    Switzerland: { capital: 'Bern', countryCode: 'CH' },
+    Uruguay: { capital: 'Montevideo', countryCode: 'UY' },
+    Belgium: { capital: 'Brussels', countryCode: 'BE' },
+    Ghana: { capital: 'Accra', countryCode: 'GH' },
+    Senegal: { capital: 'Dakar', countryCode: 'SN' },
+    Iran: { capital: 'Tehran', countryCode: 'IR' },
+    USA: { capital: 'Washington', countryCode: 'US' },
+    'United States': { capital: 'Washington', countryCode: 'US' },
+    Australia: { capital: 'Canberra', countryCode: 'AU' },
+    Turkey: { capital: 'Ankara', countryCode: 'TR' },
+    Türkiye: { capital: 'Ankara', countryCode: 'TR' },
+    Qatar: { capital: 'Doha', countryCode: 'QA' }
 };
 
-async function getCountryInfo(req, res, next) {
+async function getCountryInfo(req, res) {
     try {
         const rawName = req.params.name;
 
@@ -23,10 +38,13 @@ async function getCountryInfo(req, res, next) {
             });
         }
 
-        const queryName = countryNameMap[rawName] || rawName;
+        const countryInfo = countryDataMap[rawName] || {
+            capital: rawName,
+            countryCode: ''
+        };
 
         const apiUrl =
-            `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(queryName)}&count=1&language=en&format=json`;
+            `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(countryInfo.capital)}&count=5&language=en&format=json`;
 
         const response = await fetch(apiUrl);
 
@@ -44,12 +62,15 @@ async function getCountryInfo(req, res, next) {
             });
         }
 
-        const result = data.results[0];
+        const result =
+            data.results.find((item) => item.country_code === countryInfo.countryCode) ||
+            data.results[0];
 
         return res.json({
-            name: result.name || queryName,
-            country: result.country || queryName,
-            countryCode: result.country_code || '',
+            country: rawName,
+            capital: countryInfo.capital,
+            city: result.name || countryInfo.capital,
+            countryCode: result.country_code || countryInfo.countryCode || '',
             timezone: result.timezone || '',
             latitude: result.latitude || null,
             longitude: result.longitude || null,

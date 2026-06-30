@@ -41,8 +41,27 @@ function renderMatch() {
 async function showCountryInfo(countryName) {
     try {
         showMessage('messageBox', `Loading ${countryName} info from external API...`, 'info');
+
         const data = await apiRequest(`/external/country/${encodeURIComponent(countryName)}`);
-        showMessage('messageBox', `${data.name}: ${data.region}, capital ${data.capital || 'N/A'}, population ${data.population?.toLocaleString() || 'N/A'}.`, 'success');
+
+        let localTime = 'N/A';
+
+        if (data.timezone) {
+            localTime = new Intl.DateTimeFormat('en-GB', {
+                timeZone: data.timezone,
+                hour: '2-digit',
+                minute: '2-digit'
+            }).format(new Date());
+        }
+
+        const latitude = data.latitude ?? 'N/A';
+        const longitude = data.longitude ?? 'N/A';
+
+        showMessage(
+            'messageBox',
+            `${data.country}: capital ${data.capital}, local time ${localTime}, location ${latitude}, ${longitude}.`,
+            'success'
+        );
     } catch (error) {
         showMessage('messageBox', error.message, 'error');
     }
