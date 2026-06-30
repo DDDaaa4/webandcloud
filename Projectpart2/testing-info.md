@@ -87,7 +87,7 @@ https://github.com/DDDaaa4/webandcloud/blob/main/Projectpart2/postman/World_Cup_
 Published Postman documentation:
 
 ```text
-ADD_POSTMAN_DOCUMENTATION_LINK_HERE
+https://documenter.getpostman.com/view/41761358/2sBXwyHnMU
 ```
 
 The collection includes:
