@@ -1,171 +1,2036 @@
 {
-  "info": {
-    "name": "World Cup Prediction API",
-    "description": "Postman collection for Project Part B. Set baseUrl to http://localhost:5000 and token after login/register.",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "variable": [
-    { "key": "baseUrl", "value": "http://localhost:5000" },
-    { "key": "token", "value": "" },
-    { "key": "matchId", "value": "" },
-    { "key": "predictionId", "value": "" }
-  ],
-  "item": [
-    {
-      "name": "Health Check",
-      "request": {
-        "method": "GET",
-        "url": "{{baseUrl}}/api/health",
-        "description": "Checks that the server is running. Success response: { status: 'ok' }."
-      }
-    },
-    {
-      "name": "Auth",
-      "item": [
-        {
-          "name": "Register User",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"username\": \"Basel\",\n  \"email\": \"basel@example.com\",\n  \"password\": \"12345678\"\n}"
-            },
-            "url": "{{baseUrl}}/api/auth/register",
-            "description": "Creates a user. Success: 201 with token and user. Error: 409 if email already exists."
-          }
-        },
-        {
-          "name": "Login User",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"basel@example.com\",\n  \"password\": \"12345678\"\n}"
-            },
-            "url": "{{baseUrl}}/api/auth/login",
-            "description": "Logs in a user. Copy the returned token into the token collection variable."
-          }
-        },
-        {
-          "name": "Get Current User",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
-            "url": "{{baseUrl}}/api/auth/me",
-            "description": "Protected route. Success returns the current user. Error: 401 without token."
-          }
-        }
-      ]
-    },
-    {
-      "name": "Matches",
-      "item": [
-        {
-          "name": "Get All Matches",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/matches",
-            "description": "Returns all matches from the database."
-          }
-        },
-        {
-          "name": "Filter Matches By Team",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/matches?team=Mexico",
-            "description": "Complex query example: search by team name."
-          }
-        },
-        {
-          "name": "Filter Matches By Status",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/matches?status=upcoming",
-            "description": "Complex query example: filter by match status."
-          }
-        },
-        {
-          "name": "Get Match By ID",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/matches/{{matchId}}",
-            "description": "Returns one match. Error: 404 if the match does not exist."
-          }
-        }
-      ]
-    },
-    {
-      "name": "Predictions CRUD",
-      "item": [
-        {
-          "name": "Create Prediction",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{token}}" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"matchId\": \"{{matchId}}\",\n  \"selectedResult\": \"home\",\n  \"confidencePoints\": 5\n}"
-            },
-            "url": "{{baseUrl}}/api/predictions",
-            "description": "Creates a prediction for the logged-in user. Error: 409 if prediction already exists for the same match."
-          }
-        },
-        {
-          "name": "Read My Predictions",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
-            "url": "{{baseUrl}}/api/predictions/mine",
-            "description": "Returns predictions of the logged-in user."
-          }
-        },
-        {
-          "name": "Update Prediction",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{token}}" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"selectedResult\": \"away\",\n  \"confidencePoints\": 7\n}"
-            },
-            "url": "{{baseUrl}}/api/predictions/{{predictionId}}",
-            "description": "Updates an existing prediction. Error: 404 if it does not belong to the logged-in user."
-          }
-        },
-        {
-          "name": "Delete Prediction",
-          "request": {
-            "method": "DELETE",
-            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
-            "url": "{{baseUrl}}/api/predictions/{{predictionId}}",
-            "description": "Deletes an existing prediction."
-          }
-        }
-      ]
-    },
-    {
-      "name": "Leaderboard",
-      "request": {
-        "method": "GET",
-        "url": "{{baseUrl}}/api/leaderboard",
-        "description": "Complex aggregation query: calculates users ordered by prediction confidence points."
-      }
-    },
-    {
-      "name": "External API - Country Info",
-      "request": {
-        "method": "GET",
-        "url": "{{baseUrl}}/api/external/country/Mexico",
-        "description": "Uses an external public API through the backend to return country/team information."
-      }
-    }
-  ]
+	"info": {
+		"_postman_id": "f1c7c4a1-2945-4582-a2c5-1b60d8fbc930",
+		"name": "World Cup Prediction API",
+		"description": "Postman collection for Project Part B. Set baseUrl to [http://localhost:5000](http://localhost:5000) and token after login/register.\n\n## Flow 1: New User Prediction Flow\n\n1. Register a new user using POST /api/auth/register.\n    \n2. Login using POST /api/auth/login and copy the JWT token.\n    \n3. Fetch available matches using GET /api/matches.\n    \n4. Save one match ID into the matchId collection variable.\n    \n5. Create a prediction using POST /api/predictions.\n    \n6. Verify the prediction using GET /api/predictions/mine.\n    \n7. Check that the leaderboard updates using GET /api/leaderboard.\n    \n\n### This flow proves:\n\n- User management\n    \n- Authentication\n    \n- Read matches from DB\n    \n- Create prediction\n    \n- Fetch by logged-in user\n    \n- Leaderboard/statistics\n    \n\n## Flow 2: Manage Prediction Flow\n\n1. Login using POST /api/auth/login.\n    \n2. Fetch user predictions using GET /api/predictions/mine.\n    \n3. Save one prediction ID into the predictionId collection variable.\n    \n4. Update the prediction using PUT /api/predictions/{{predictionId}}.\n    \n5. Verify the updated prediction using GET /api/predictions/mine.\n    \n6. Delete the prediction using DELETE /api/predictions/{{predictionId}}.\n    \n7. Verify deletion using GET /api/predictions/mine.\n    \n\n### This flow proves:\n\n- StartFragmentRead\n    \n- Update\n    \n- Delete\n    \n- Protected routes\n    \n- User-specific data\n    \n- Relation between prediction and matchEndFragment\n    \n\n## External API Flow\n\nThe Featured Matches page calls GET /api/external/country/:name through the backend.  \nThe backend uses the Open-Meteo Geocoding API to return capital/city location, country code, timezone, latitude, and longitude.  \nExample:\n\nGET /api/external/country/Mexico",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41761358",
+		"_collection_link": "https://www.postman.com/cryosat-candidate-24289712/workspace/my-workspace/collection/41761358-f1c7c4a1-2945-4582-a2c5-1b60d8fbc930?action=share&source=collection_link&creator=41761358"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"postmantest2\",\n  \"email\": \"postmantest2@test.com\",\n  \"password\": \"12345678\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						},
+						"description": "Creates a user. Success: 201 with token and user. Error: 409 if email already exists."
+					},
+					"response": [
+						{
+							"name": "Success - Register first User",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"postmantest\",\n  \"email\": \"postmantest1@test.com\",\n  \"password\": \"12345678\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/register",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5500"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "311"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"137-1zEmTXO2CZqY0WOWGHzlvAc8gg8\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 29 Jun 2026 21:50:36 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQyZThhYzhmODMxNzIzNDBlNWUwNGMiLCJpYXQiOjE3ODI3Njk4MzYsImV4cCI6MTc4MzM3NDYzNn0.lD18AQGqqofEQcvYiHDq5nZAp3dpLdU2zctscUDDyVo\",\n    \"user\": {\n        \"id\": \"6a42e8ac8f83172340e5e04c\",\n        \"username\": \"postmantest\",\n        \"email\": \"postmantest1@test.com\",\n        \"points\": 0,\n        \"role\": \"user\"\n    }\n}"
+						},
+						{
+							"name": "Success - Register second User",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"postmantest2\",\n  \"email\": \"postmantest2@test.com\",\n  \"password\": \"12345678\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/register",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5500"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "312"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"138-toYCl0A5tfSDj75alOH8WXnH95w\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 29 Jun 2026 21:51:19 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQyZThkNzhmODMxNzIzNDBlNWUwNTAiLCJpYXQiOjE3ODI3Njk4NzksImV4cCI6MTc4MzM3NDY3OX0.jHG6bvRjtswNkCQc2v5eBXYb2nY34rNsjvTwKA1gAvg\",\n    \"user\": {\n        \"id\": \"6a42e8d78f83172340e5e050\",\n        \"username\": \"postmantest2\",\n        \"email\": \"postmantest2@test.com\",\n        \"points\": 0,\n        \"role\": \"user\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"postmantest1@test.com\",\n  \"password\": \"12345678\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Logs in a user. Copy the returned token into the token collection variable."
+					},
+					"response": [
+						{
+							"name": "success -Login first User",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"postmantest1@test.com\",\n  \"password\": \"12345678\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5500"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "311"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"137-n9a1zq/dFqsAZtekK/niPdBGfR8\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 29 Jun 2026 21:52:36 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQyZThhYzhmODMxNzIzNDBlNWUwNGMiLCJpYXQiOjE3ODI3Njk5NTYsImV4cCI6MTc4MzM3NDc1Nn0.dmn91IG5wIKodzy7_e5nq2EmC9hRH5qNuJ-22YLhpZ8\",\n    \"user\": {\n        \"id\": \"6a42e8ac8f83172340e5e04c\",\n        \"username\": \"postmantest\",\n        \"email\": \"postmantest1@test.com\",\n        \"points\": 0,\n        \"role\": \"user\"\n    }\n}"
+						},
+						{
+							"name": "success - Login second User",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"postmantest1@test.com\",\n  \"password\": \"12345678\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5500"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "311"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"137-Tn/FUeJelAB9YnTTNSdWcckEe5Q\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 29 Jun 2026 21:57:04 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQyZThhYzhmODMxNzIzNDBlNWUwNGMiLCJpYXQiOjE3ODI3NzAyMjQsImV4cCI6MTc4MzM3NTAyNH0.7ko1TWgfeNJo2lowiwRrqknEj2eOuKmivTyYTpRSjnU\",\n    \"user\": {\n        \"id\": \"6a42e8ac8f83172340e5e04c\",\n        \"username\": \"postmantest\",\n        \"email\": \"postmantest1@test.com\",\n        \"points\": 0,\n        \"role\": \"user\"\n    }\n}"
+						},
+						{
+							"name": "Login User",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"postmantest1@test.com\",\n  \"password\": \"12345678\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5500"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "311"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"137-Yle9+BgcqNV2oJ2X3ZaY32Qw2ps\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 29 Jun 2026 22:07:27 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQyZThhYzhmODMxNzIzNDBlNWUwNGMiLCJpYXQiOjE3ODI3NzA4NDcsImV4cCI6MTc4MzM3NTY0N30.Or9mCrxT_dGniMSNshNPFun3XeOtt0LoI1_TwuOrk0s\",\n    \"user\": {\n        \"id\": \"6a42e8ac8f83172340e5e04c\",\n        \"username\": \"postmantest\",\n        \"email\": \"postmantest1@test.com\",\n        \"points\": 0,\n        \"role\": \"user\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Current User",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQyZThhYzhmODMxNzIzNDBlNWUwNGMiLCJpYXQiOjE3ODI3NzA4NDcsImV4cCI6MTc4MzM3NTY0N30.Or9mCrxT_dGniMSNshNPFun3XeOtt0LoI1_TwuOrk0s",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"me"
+							]
+						},
+						"description": "Protected route. Success returns the current user. Error: 401 without token."
+					},
+					"response": [
+						{
+							"name": "Success - Get Current User",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/me",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"me"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5500"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "124"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"7c-8kJ0efWoabczUsyjw/S8Clmt81g\""
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 30 Jun 2026 08:16:58 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"user\": {\n        \"id\": \"6a42e8ac8f83172340e5e04c\",\n        \"username\": \"postmantest\",\n        \"email\": \"postmantest1@test.com\",\n        \"points\": 0,\n        \"role\": \"user\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "{{baseUrl}}/api/auth/register",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"postmantest\",\n  \"email\": \"postmantest1@test.com\",\n  \"password\": \"12345678\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Existing email - {{baseUrl}}/api/auth/register",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"postmantest\",\n  \"email\": \"postmantest1@test.com\",\n  \"password\": \"12345678\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/register",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5500"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "35"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"23-s4n7Q/QzQ4l5FrQrsqnQHPW3H8g\""
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 30 Jun 2026 08:17:19 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Email already exists.\"\n}"
+						}
+					]
+				},
+				{
+					"name": "{{baseUrl}}/api/auth/login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"postmantest1@test.com\",\n  \"password\": \"12345678\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "{{baseUrl}}/api/auth/login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"postmantest1@test.com\",\n  \"password\": \"12345678\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5500"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "311"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"137-Hsdq5Z/y24BlRx4Cs8p5/9QEoLE\""
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 30 Jun 2026 08:17:51 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQyZThhYzhmODMxNzIzNDBlNWUwNGMiLCJpYXQiOjE3ODI4MDc0NzEsImV4cCI6MTc4MzQxMjI3MX0.wmkCP9GvaiWEZCsigY_aWkXB-AOP02Bd0Sy2wqqQc_E\",\n    \"user\": {\n        \"id\": \"6a42e8ac8f83172340e5e04c\",\n        \"username\": \"postmantest\",\n        \"email\": \"postmantest1@test.com\",\n        \"points\": 0,\n        \"role\": \"user\"\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Matches",
+			"item": [
+				{
+					"name": "Get All Matches",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/matches",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"matches"
+							]
+						},
+						"description": "Returns all matches from the database."
+					},
+					"response": [
+						{
+							"name": "Success - Get All Matches",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/matches",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"matches"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5500"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "8101"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1fa5-xd1WfqGRDBqqKnrkK0w7ytmOnZ4\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 29 Jun 2026 22:11:37 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"count\": 24,\n    \"matches\": [\n        {\n            \"_id\": \"6a42cbf623e5689a8827f70e\",\n            \"matchNum\": 1,\n            \"__v\": 0,\n            \"awayFlag\": \"images/South_Africa.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"South Africa\",\n            \"createdAt\": \"2026-06-29T19:53:53.153Z\",\n            \"homeFlag\": \"images/Mexico.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Mexico\",\n            \"matchDate\": \"2026-06-30T20:20:44.183Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:44.192Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f70f\",\n            \"matchNum\": 2,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Czechia.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Czechia\",\n            \"createdAt\": \"2026-06-29T19:53:53.658Z\",\n            \"homeFlag\": \"images/South_Korea.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"South Korea\",\n            \"matchDate\": \"2026-07-01T20:20:44.745Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:44.745Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f710\",\n            \"matchNum\": 3,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Bosnia_and_Herzegovina.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Bosnia and Herzegovina\",\n            \"createdAt\": \"2026-06-29T19:53:53.725Z\",\n            \"homeFlag\": \"images/Canada.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Canada\",\n            \"matchDate\": \"2026-07-02T20:20:44.810Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:44.811Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f711\",\n            \"matchNum\": 4,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Switzerland.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Switzerland\",\n            \"createdAt\": \"2026-06-29T19:53:53.792Z\",\n            \"homeFlag\": \"images/Qatar.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Qatar\",\n            \"matchDate\": \"2026-07-03T20:20:44.887Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:44.888Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f712\",\n            \"matchNum\": 5,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Morocco.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Morocco\",\n            \"createdAt\": \"2026-06-29T19:53:53.857Z\",\n            \"homeFlag\": \"images/Brazil.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Brazil\",\n            \"matchDate\": \"2026-07-04T20:20:44.953Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:44.954Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f713\",\n            \"matchNum\": 6,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Scotland.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Scotland\",\n            \"createdAt\": \"2026-06-29T19:53:53.923Z\",\n            \"homeFlag\": \"images/Haiti.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Haiti\",\n            \"matchDate\": \"2026-07-05T20:20:45.020Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.020Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f714\",\n            \"matchNum\": 7,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Paraguay.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Paraguay\",\n            \"createdAt\": \"2026-06-29T19:53:53.987Z\",\n            \"homeFlag\": \"images/USA.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"USA\",\n            \"matchDate\": \"2026-07-06T20:20:45.084Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.084Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f715\",\n            \"matchNum\": 8,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Turkiye.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Türkiye\",\n            \"createdAt\": \"2026-06-29T19:53:54.052Z\",\n            \"homeFlag\": \"images/Australia.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Australia\",\n            \"matchDate\": \"2026-07-07T20:20:45.151Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.152Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f716\",\n            \"matchNum\": 9,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Ecuador.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Ecuador\",\n            \"createdAt\": \"2026-06-29T19:53:54.118Z\",\n            \"homeFlag\": \"images/Cote_dIvoire.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Cote d'Ivoire\",\n            \"matchDate\": \"2026-07-08T20:20:45.218Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.219Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f717\",\n            \"matchNum\": 10,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Curacao.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Curacao\",\n            \"createdAt\": \"2026-06-29T19:53:54.185Z\",\n            \"homeFlag\": \"images/Germany.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Germany\",\n            \"matchDate\": \"2026-07-09T20:20:45.285Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.286Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f718\",\n            \"matchNum\": 11,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Japan.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Japan\",\n            \"createdAt\": \"2026-06-29T19:53:54.250Z\",\n            \"homeFlag\": \"images/Netherlands.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Netherlands\",\n            \"matchDate\": \"2026-07-10T20:20:45.353Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.353Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f719\",\n            \"matchNum\": 12,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Tunisia.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Tunisia\",\n            \"createdAt\": \"2026-06-29T19:53:54.322Z\",\n            \"homeFlag\": \"images/Sweden.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Sweden\",\n            \"matchDate\": \"2026-07-11T20:20:45.423Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.423Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f71a\",\n            \"matchNum\": 13,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Egypt.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Egypt\",\n            \"createdAt\": \"2026-06-29T19:53:54.389Z\",\n            \"homeFlag\": \"images/Belgium.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Belgium\",\n            \"matchDate\": \"2026-07-12T20:20:45.488Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.488Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f71b\",\n            \"matchNum\": 14,\n            \"__v\": 0,\n            \"awayFlag\": \"images/New_Zealand.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"New Zealand\",\n            \"createdAt\": \"2026-06-29T19:53:54.454Z\",\n            \"homeFlag\": \"images/IR_Iran.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"IR Iran\",\n            \"matchDate\": \"2026-07-13T20:20:45.552Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.552Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f71c\",\n            \"matchNum\": 15,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Cabo_Verde.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Cabo Verde\",\n            \"createdAt\": \"2026-06-29T19:53:54.519Z\",\n            \"homeFlag\": \"images/Spain.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Spain\",\n            \"matchDate\": \"2026-07-14T20:20:45.617Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.617Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f71d\",\n            \"matchNum\": 16,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Uruguay.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Uruguay\",\n            \"createdAt\": \"2026-06-29T19:53:54.583Z\",\n            \"homeFlag\": \"images/Saudi_Arabia.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Saudi Arabia\",\n            \"matchDate\": \"2026-07-15T20:20:45.681Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.682Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f71e\",\n            \"matchNum\": 17,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Senegal.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Senegal\",\n            \"createdAt\": \"2026-06-29T19:53:54.647Z\",\n            \"homeFlag\": \"images/France.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"France\",\n            \"matchDate\": \"2026-07-16T20:20:45.748Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.748Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f71f\",\n            \"matchNum\": 18,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Norway.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Norway\",\n            \"createdAt\": \"2026-06-29T19:53:54.714Z\",\n            \"homeFlag\": \"images/Iraq.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Iraq\",\n            \"matchDate\": \"2026-07-17T20:20:45.813Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.814Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f720\",\n            \"matchNum\": 19,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Algeria.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Algeria\",\n            \"createdAt\": \"2026-06-29T19:53:54.777Z\",\n            \"homeFlag\": \"images/Argentina.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Argentina\",\n            \"matchDate\": \"2026-07-18T20:20:45.881Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.881Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f721\",\n            \"matchNum\": 20,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Jordan.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Jordan\",\n            \"createdAt\": \"2026-06-29T19:53:54.843Z\",\n            \"homeFlag\": \"images/Austria.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Austria\",\n            \"matchDate\": \"2026-07-19T20:20:45.949Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.950Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f722\",\n            \"matchNum\": 21,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Congo_DR.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Congo DR\",\n            \"createdAt\": \"2026-06-29T19:53:54.914Z\",\n            \"homeFlag\": \"images/Portugal.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Portugal\",\n            \"matchDate\": \"2026-07-20T20:20:46.013Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:46.014Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f723\",\n            \"matchNum\": 22,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Colombia.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Colombia\",\n            \"createdAt\": \"2026-06-29T19:53:54.977Z\",\n            \"homeFlag\": \"images/Uzbekistan.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Uzbekistan\",\n            \"matchDate\": \"2026-07-21T20:20:46.078Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:46.078Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f724\",\n            \"matchNum\": 23,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Croatia.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Croatia\",\n            \"createdAt\": \"2026-06-29T19:53:55.040Z\",\n            \"homeFlag\": \"images/England.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"England\",\n            \"matchDate\": \"2026-07-22T20:20:46.142Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:46.142Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f725\",\n            \"matchNum\": 24,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Panama.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Panama\",\n            \"createdAt\": \"2026-06-29T19:53:55.102Z\",\n            \"homeFlag\": \"images/Ghana.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Ghana\",\n            \"matchDate\": \"2026-07-23T20:20:46.207Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:46.207Z\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Filter Matches By Team",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/matches?team=Mexico",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"matches"
+							],
+							"query": [
+								{
+									"key": "team",
+									"value": "Mexico"
+								}
+							]
+						},
+						"description": "Complex query example: search by team name."
+					},
+					"response": [
+						{
+							"name": "Success - Filter Matches By Team",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/matches?team=Mexico",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"matches"
+									],
+									"query": [
+										{
+											"key": "team",
+											"value": "Mexico"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5500"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "364"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"16c-RbA49l0os6mFqyOzRnt8bQYccrY\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 29 Jun 2026 22:11:52 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"count\": 1,\n    \"matches\": [\n        {\n            \"_id\": \"6a42cbf623e5689a8827f70e\",\n            \"matchNum\": 1,\n            \"__v\": 0,\n            \"awayFlag\": \"images/South_Africa.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"South Africa\",\n            \"createdAt\": \"2026-06-29T19:53:53.153Z\",\n            \"homeFlag\": \"images/Mexico.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Mexico\",\n            \"matchDate\": \"2026-06-30T20:20:44.183Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:44.192Z\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Filter Matches By Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/matches?status=upcoming",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"matches"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "upcoming"
+								}
+							]
+						},
+						"description": "Complex query example: filter by match status."
+					},
+					"response": [
+						{
+							"name": "Success - Filter Matches By Status",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/matches?status=upcoming",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"matches"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "upcoming"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5500"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "8101"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1fa5-xd1WfqGRDBqqKnrkK0w7ytmOnZ4\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 29 Jun 2026 22:12:13 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"count\": 24,\n    \"matches\": [\n        {\n            \"_id\": \"6a42cbf623e5689a8827f70e\",\n            \"matchNum\": 1,\n            \"__v\": 0,\n            \"awayFlag\": \"images/South_Africa.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"South Africa\",\n            \"createdAt\": \"2026-06-29T19:53:53.153Z\",\n            \"homeFlag\": \"images/Mexico.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Mexico\",\n            \"matchDate\": \"2026-06-30T20:20:44.183Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:44.192Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f70f\",\n            \"matchNum\": 2,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Czechia.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Czechia\",\n            \"createdAt\": \"2026-06-29T19:53:53.658Z\",\n            \"homeFlag\": \"images/South_Korea.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"South Korea\",\n            \"matchDate\": \"2026-07-01T20:20:44.745Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:44.745Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f710\",\n            \"matchNum\": 3,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Bosnia_and_Herzegovina.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Bosnia and Herzegovina\",\n            \"createdAt\": \"2026-06-29T19:53:53.725Z\",\n            \"homeFlag\": \"images/Canada.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Canada\",\n            \"matchDate\": \"2026-07-02T20:20:44.810Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:44.811Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f711\",\n            \"matchNum\": 4,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Switzerland.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Switzerland\",\n            \"createdAt\": \"2026-06-29T19:53:53.792Z\",\n            \"homeFlag\": \"images/Qatar.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Qatar\",\n            \"matchDate\": \"2026-07-03T20:20:44.887Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:44.888Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f712\",\n            \"matchNum\": 5,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Morocco.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Morocco\",\n            \"createdAt\": \"2026-06-29T19:53:53.857Z\",\n            \"homeFlag\": \"images/Brazil.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Brazil\",\n            \"matchDate\": \"2026-07-04T20:20:44.953Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:44.954Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f713\",\n            \"matchNum\": 6,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Scotland.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Scotland\",\n            \"createdAt\": \"2026-06-29T19:53:53.923Z\",\n            \"homeFlag\": \"images/Haiti.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Haiti\",\n            \"matchDate\": \"2026-07-05T20:20:45.020Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.020Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f714\",\n            \"matchNum\": 7,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Paraguay.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Paraguay\",\n            \"createdAt\": \"2026-06-29T19:53:53.987Z\",\n            \"homeFlag\": \"images/USA.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"USA\",\n            \"matchDate\": \"2026-07-06T20:20:45.084Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.084Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f715\",\n            \"matchNum\": 8,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Turkiye.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Türkiye\",\n            \"createdAt\": \"2026-06-29T19:53:54.052Z\",\n            \"homeFlag\": \"images/Australia.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Australia\",\n            \"matchDate\": \"2026-07-07T20:20:45.151Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.152Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f716\",\n            \"matchNum\": 9,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Ecuador.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Ecuador\",\n            \"createdAt\": \"2026-06-29T19:53:54.118Z\",\n            \"homeFlag\": \"images/Cote_dIvoire.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Cote d'Ivoire\",\n            \"matchDate\": \"2026-07-08T20:20:45.218Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.219Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f717\",\n            \"matchNum\": 10,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Curacao.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Curacao\",\n            \"createdAt\": \"2026-06-29T19:53:54.185Z\",\n            \"homeFlag\": \"images/Germany.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Germany\",\n            \"matchDate\": \"2026-07-09T20:20:45.285Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.286Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f718\",\n            \"matchNum\": 11,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Japan.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Japan\",\n            \"createdAt\": \"2026-06-29T19:53:54.250Z\",\n            \"homeFlag\": \"images/Netherlands.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Netherlands\",\n            \"matchDate\": \"2026-07-10T20:20:45.353Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.353Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f719\",\n            \"matchNum\": 12,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Tunisia.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Tunisia\",\n            \"createdAt\": \"2026-06-29T19:53:54.322Z\",\n            \"homeFlag\": \"images/Sweden.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Sweden\",\n            \"matchDate\": \"2026-07-11T20:20:45.423Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.423Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f71a\",\n            \"matchNum\": 13,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Egypt.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Egypt\",\n            \"createdAt\": \"2026-06-29T19:53:54.389Z\",\n            \"homeFlag\": \"images/Belgium.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Belgium\",\n            \"matchDate\": \"2026-07-12T20:20:45.488Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.488Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f71b\",\n            \"matchNum\": 14,\n            \"__v\": 0,\n            \"awayFlag\": \"images/New_Zealand.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"New Zealand\",\n            \"createdAt\": \"2026-06-29T19:53:54.454Z\",\n            \"homeFlag\": \"images/IR_Iran.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"IR Iran\",\n            \"matchDate\": \"2026-07-13T20:20:45.552Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.552Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f71c\",\n            \"matchNum\": 15,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Cabo_Verde.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Cabo Verde\",\n            \"createdAt\": \"2026-06-29T19:53:54.519Z\",\n            \"homeFlag\": \"images/Spain.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Spain\",\n            \"matchDate\": \"2026-07-14T20:20:45.617Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.617Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f71d\",\n            \"matchNum\": 16,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Uruguay.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Uruguay\",\n            \"createdAt\": \"2026-06-29T19:53:54.583Z\",\n            \"homeFlag\": \"images/Saudi_Arabia.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Saudi Arabia\",\n            \"matchDate\": \"2026-07-15T20:20:45.681Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.682Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f71e\",\n            \"matchNum\": 17,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Senegal.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Senegal\",\n            \"createdAt\": \"2026-06-29T19:53:54.647Z\",\n            \"homeFlag\": \"images/France.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"France\",\n            \"matchDate\": \"2026-07-16T20:20:45.748Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.748Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f71f\",\n            \"matchNum\": 18,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Norway.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Norway\",\n            \"createdAt\": \"2026-06-29T19:53:54.714Z\",\n            \"homeFlag\": \"images/Iraq.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Iraq\",\n            \"matchDate\": \"2026-07-17T20:20:45.813Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.814Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f720\",\n            \"matchNum\": 19,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Algeria.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Algeria\",\n            \"createdAt\": \"2026-06-29T19:53:54.777Z\",\n            \"homeFlag\": \"images/Argentina.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Argentina\",\n            \"matchDate\": \"2026-07-18T20:20:45.881Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.881Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f721\",\n            \"matchNum\": 20,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Jordan.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Jordan\",\n            \"createdAt\": \"2026-06-29T19:53:54.843Z\",\n            \"homeFlag\": \"images/Austria.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Austria\",\n            \"matchDate\": \"2026-07-19T20:20:45.949Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.950Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f722\",\n            \"matchNum\": 21,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Congo_DR.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Congo DR\",\n            \"createdAt\": \"2026-06-29T19:53:54.914Z\",\n            \"homeFlag\": \"images/Portugal.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Portugal\",\n            \"matchDate\": \"2026-07-20T20:20:46.013Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:46.014Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f723\",\n            \"matchNum\": 22,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Colombia.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Colombia\",\n            \"createdAt\": \"2026-06-29T19:53:54.977Z\",\n            \"homeFlag\": \"images/Uzbekistan.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Uzbekistan\",\n            \"matchDate\": \"2026-07-21T20:20:46.078Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:46.078Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f724\",\n            \"matchNum\": 23,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Croatia.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Croatia\",\n            \"createdAt\": \"2026-06-29T19:53:55.040Z\",\n            \"homeFlag\": \"images/England.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"England\",\n            \"matchDate\": \"2026-07-22T20:20:46.142Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:46.142Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f725\",\n            \"matchNum\": 24,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Panama.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Panama\",\n            \"createdAt\": \"2026-06-29T19:53:55.102Z\",\n            \"homeFlag\": \"images/Ghana.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Ghana\",\n            \"matchDate\": \"2026-07-23T20:20:46.207Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:46.207Z\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Match By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/matches/{{matchId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"matches",
+								"{{matchId}}"
+							]
+						},
+						"description": "Returns one match. Error: 404 if the match does not exist."
+					},
+					"response": [
+						{
+							"name": "Success - Get Match By ID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/matches/{{matchId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"matches",
+										"{{matchId}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5500"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "8101"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1fa5-xd1WfqGRDBqqKnrkK0w7ytmOnZ4\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 29 Jun 2026 22:12:26 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"count\": 24,\n    \"matches\": [\n        {\n            \"_id\": \"6a42cbf623e5689a8827f70e\",\n            \"matchNum\": 1,\n            \"__v\": 0,\n            \"awayFlag\": \"images/South_Africa.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"South Africa\",\n            \"createdAt\": \"2026-06-29T19:53:53.153Z\",\n            \"homeFlag\": \"images/Mexico.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Mexico\",\n            \"matchDate\": \"2026-06-30T20:20:44.183Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:44.192Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f70f\",\n            \"matchNum\": 2,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Czechia.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Czechia\",\n            \"createdAt\": \"2026-06-29T19:53:53.658Z\",\n            \"homeFlag\": \"images/South_Korea.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"South Korea\",\n            \"matchDate\": \"2026-07-01T20:20:44.745Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:44.745Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f710\",\n            \"matchNum\": 3,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Bosnia_and_Herzegovina.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Bosnia and Herzegovina\",\n            \"createdAt\": \"2026-06-29T19:53:53.725Z\",\n            \"homeFlag\": \"images/Canada.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Canada\",\n            \"matchDate\": \"2026-07-02T20:20:44.810Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:44.811Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f711\",\n            \"matchNum\": 4,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Switzerland.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Switzerland\",\n            \"createdAt\": \"2026-06-29T19:53:53.792Z\",\n            \"homeFlag\": \"images/Qatar.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Qatar\",\n            \"matchDate\": \"2026-07-03T20:20:44.887Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:44.888Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f712\",\n            \"matchNum\": 5,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Morocco.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Morocco\",\n            \"createdAt\": \"2026-06-29T19:53:53.857Z\",\n            \"homeFlag\": \"images/Brazil.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Brazil\",\n            \"matchDate\": \"2026-07-04T20:20:44.953Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:44.954Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f713\",\n            \"matchNum\": 6,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Scotland.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Scotland\",\n            \"createdAt\": \"2026-06-29T19:53:53.923Z\",\n            \"homeFlag\": \"images/Haiti.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Haiti\",\n            \"matchDate\": \"2026-07-05T20:20:45.020Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.020Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f714\",\n            \"matchNum\": 7,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Paraguay.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Paraguay\",\n            \"createdAt\": \"2026-06-29T19:53:53.987Z\",\n            \"homeFlag\": \"images/USA.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"USA\",\n            \"matchDate\": \"2026-07-06T20:20:45.084Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.084Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f715\",\n            \"matchNum\": 8,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Turkiye.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Türkiye\",\n            \"createdAt\": \"2026-06-29T19:53:54.052Z\",\n            \"homeFlag\": \"images/Australia.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Australia\",\n            \"matchDate\": \"2026-07-07T20:20:45.151Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.152Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f716\",\n            \"matchNum\": 9,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Ecuador.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Ecuador\",\n            \"createdAt\": \"2026-06-29T19:53:54.118Z\",\n            \"homeFlag\": \"images/Cote_dIvoire.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Cote d'Ivoire\",\n            \"matchDate\": \"2026-07-08T20:20:45.218Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.219Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f717\",\n            \"matchNum\": 10,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Curacao.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Curacao\",\n            \"createdAt\": \"2026-06-29T19:53:54.185Z\",\n            \"homeFlag\": \"images/Germany.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Germany\",\n            \"matchDate\": \"2026-07-09T20:20:45.285Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.286Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f718\",\n            \"matchNum\": 11,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Japan.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Japan\",\n            \"createdAt\": \"2026-06-29T19:53:54.250Z\",\n            \"homeFlag\": \"images/Netherlands.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Netherlands\",\n            \"matchDate\": \"2026-07-10T20:20:45.353Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.353Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f719\",\n            \"matchNum\": 12,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Tunisia.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Tunisia\",\n            \"createdAt\": \"2026-06-29T19:53:54.322Z\",\n            \"homeFlag\": \"images/Sweden.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Sweden\",\n            \"matchDate\": \"2026-07-11T20:20:45.423Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.423Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f71a\",\n            \"matchNum\": 13,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Egypt.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Egypt\",\n            \"createdAt\": \"2026-06-29T19:53:54.389Z\",\n            \"homeFlag\": \"images/Belgium.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Belgium\",\n            \"matchDate\": \"2026-07-12T20:20:45.488Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.488Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f71b\",\n            \"matchNum\": 14,\n            \"__v\": 0,\n            \"awayFlag\": \"images/New_Zealand.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"New Zealand\",\n            \"createdAt\": \"2026-06-29T19:53:54.454Z\",\n            \"homeFlag\": \"images/IR_Iran.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"IR Iran\",\n            \"matchDate\": \"2026-07-13T20:20:45.552Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.552Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f71c\",\n            \"matchNum\": 15,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Cabo_Verde.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Cabo Verde\",\n            \"createdAt\": \"2026-06-29T19:53:54.519Z\",\n            \"homeFlag\": \"images/Spain.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Spain\",\n            \"matchDate\": \"2026-07-14T20:20:45.617Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.617Z\"\n        },\n        {\n            \"_id\": \"6a42cbf723e5689a8827f71d\",\n            \"matchNum\": 16,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Uruguay.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Uruguay\",\n            \"createdAt\": \"2026-06-29T19:53:54.583Z\",\n            \"homeFlag\": \"images/Saudi_Arabia.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Saudi Arabia\",\n            \"matchDate\": \"2026-07-15T20:20:45.681Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.682Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f71e\",\n            \"matchNum\": 17,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Senegal.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Senegal\",\n            \"createdAt\": \"2026-06-29T19:53:54.647Z\",\n            \"homeFlag\": \"images/France.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"France\",\n            \"matchDate\": \"2026-07-16T20:20:45.748Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.748Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f71f\",\n            \"matchNum\": 18,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Norway.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Norway\",\n            \"createdAt\": \"2026-06-29T19:53:54.714Z\",\n            \"homeFlag\": \"images/Iraq.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Iraq\",\n            \"matchDate\": \"2026-07-17T20:20:45.813Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.814Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f720\",\n            \"matchNum\": 19,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Algeria.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Algeria\",\n            \"createdAt\": \"2026-06-29T19:53:54.777Z\",\n            \"homeFlag\": \"images/Argentina.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Argentina\",\n            \"matchDate\": \"2026-07-18T20:20:45.881Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.881Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f721\",\n            \"matchNum\": 20,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Jordan.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Jordan\",\n            \"createdAt\": \"2026-06-29T19:53:54.843Z\",\n            \"homeFlag\": \"images/Austria.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Austria\",\n            \"matchDate\": \"2026-07-19T20:20:45.949Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.950Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f722\",\n            \"matchNum\": 21,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Congo_DR.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Congo DR\",\n            \"createdAt\": \"2026-06-29T19:53:54.914Z\",\n            \"homeFlag\": \"images/Portugal.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Portugal\",\n            \"matchDate\": \"2026-07-20T20:20:46.013Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:46.014Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f723\",\n            \"matchNum\": 22,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Colombia.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Colombia\",\n            \"createdAt\": \"2026-06-29T19:53:54.977Z\",\n            \"homeFlag\": \"images/Uzbekistan.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Uzbekistan\",\n            \"matchDate\": \"2026-07-21T20:20:46.078Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:46.078Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f724\",\n            \"matchNum\": 23,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Croatia.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Croatia\",\n            \"createdAt\": \"2026-06-29T19:53:55.040Z\",\n            \"homeFlag\": \"images/England.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"England\",\n            \"matchDate\": \"2026-07-22T20:20:46.142Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:46.142Z\"\n        },\n        {\n            \"_id\": \"6a42cbf823e5689a8827f725\",\n            \"matchNum\": 24,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Panama.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Panama\",\n            \"createdAt\": \"2026-06-29T19:53:55.102Z\",\n            \"homeFlag\": \"images/Ghana.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Ghana\",\n            \"matchDate\": \"2026-07-23T20:20:46.207Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:46.207Z\"\n        }\n    ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Predictions CRUD",
+			"item": [
+				{
+					"name": "Create Prediction",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"matchId\": \"{{matchId}}\",\n  \"selectedResult\": \"home\",\n  \"confidencePoints\": 5\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/predictions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"predictions"
+							]
+						},
+						"description": "Creates a prediction for the logged-in user. Error: 409 if prediction already exists for the same match."
+					},
+					"response": [
+						{
+							"name": "Success - Create Prediction",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"matchId\": \"{{matchId}}\",\n  \"selectedResult\": \"home\",\n  \"confidencePoints\": 5\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/predictions",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"predictions"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5500"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "281"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"119-BSegl8i0RSEekYu0uE7Awv2Xvns\""
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 30 Jun 2026 07:37:50 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Prediction created.\",\n    \"prediction\": {\n        \"user\": \"6a42e8ac8f83172340e5e04c\",\n        \"match\": \"6a42cbf723e5689a8827f718\",\n        \"selectedResult\": \"home\",\n        \"confidencePoints\": 5,\n        \"_id\": \"6a43724e55795048a86045d1\",\n        \"createdAt\": \"2026-06-30T07:37:50.420Z\",\n        \"updatedAt\": \"2026-06-30T07:37:50.420Z\",\n        \"__v\": 0\n    }\n}"
+						},
+						{
+							"name": "double prediction handleCreate Prediction",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"matchId\": \"{{matchId}}\",\n  \"selectedResult\": \"home\",\n  \"confidencePoints\": 5\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/predictions",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"predictions"
+									]
+								}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5500"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "88"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"58-L3sIWtn8Mh/M1SoBATOPyu1hgvQ\""
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 30 Jun 2026 08:19:16 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"You already predicted this match. Update your existing prediction instead.\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Read My Predictions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/predictions/mine",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"predictions",
+								"mine"
+							]
+						},
+						"description": "Returns predictions of the logged-in user."
+					},
+					"response": [
+						{
+							"name": "Read My Predictions",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/predictions/mine",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"predictions",
+										"mine"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5500"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "573"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"23d-6Y72ps6aagnbXp9wQwOc2Dx1MbQ\""
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 30 Jun 2026 07:39:35 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"count\": 1,\n    \"predictions\": [\n        {\n            \"_id\": \"6a43724e55795048a86045d1\",\n            \"user\": \"6a42e8ac8f83172340e5e04c\",\n            \"match\": {\n                \"_id\": \"6a42cbf723e5689a8827f718\",\n                \"matchNum\": 11,\n                \"__v\": 0,\n                \"awayFlag\": \"images/Japan.png\",\n                \"awayScore\": null,\n                \"awayTeam\": \"Japan\",\n                \"createdAt\": \"2026-06-29T19:53:54.250Z\",\n                \"homeFlag\": \"images/Netherlands.png\",\n                \"homeScore\": null,\n                \"homeTeam\": \"Netherlands\",\n                \"matchDate\": \"2026-07-10T20:20:45.353Z\",\n                \"status\": \"upcoming\",\n                \"updatedAt\": \"2026-06-29T20:20:45.353Z\"\n            },\n            \"selectedResult\": \"home\",\n            \"confidencePoints\": 5,\n            \"createdAt\": \"2026-06-30T07:37:50.420Z\",\n            \"updatedAt\": \"2026-06-30T07:37:50.420Z\",\n            \"__v\": 0\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Prediction",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"selectedResult\": \"away\",\n  \"confidencePoints\": 7\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/predictions/{{predictionId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"predictions",
+								"{{predictionId}}"
+							]
+						},
+						"description": "Updates an existing prediction. Error: 404 if it does not belong to the logged-in user."
+					},
+					"response": [
+						{
+							"name": "Success - Update Prediction",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"selectedResult\": \"away\",\n  \"confidencePoints\": 7\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/predictions/{{predictionId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"predictions",
+										"{{predictionId}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5500"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "592"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"250-hK5iBlWh13ptkc9JxRDb1KrbB/4\""
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 30 Jun 2026 07:39:59 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Prediction updated.\",\n    \"prediction\": {\n        \"_id\": \"6a43724e55795048a86045d1\",\n        \"user\": \"6a42e8ac8f83172340e5e04c\",\n        \"match\": {\n            \"_id\": \"6a42cbf723e5689a8827f718\",\n            \"matchNum\": 11,\n            \"__v\": 0,\n            \"awayFlag\": \"images/Japan.png\",\n            \"awayScore\": null,\n            \"awayTeam\": \"Japan\",\n            \"createdAt\": \"2026-06-29T19:53:54.250Z\",\n            \"homeFlag\": \"images/Netherlands.png\",\n            \"homeScore\": null,\n            \"homeTeam\": \"Netherlands\",\n            \"matchDate\": \"2026-07-10T20:20:45.353Z\",\n            \"status\": \"upcoming\",\n            \"updatedAt\": \"2026-06-29T20:20:45.353Z\"\n        },\n        \"selectedResult\": \"away\",\n        \"confidencePoints\": 7,\n        \"createdAt\": \"2026-06-30T07:37:50.420Z\",\n        \"updatedAt\": \"2026-06-30T07:39:59.132Z\",\n        \"__v\": 0\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Prediction",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/predictions/{{predictionId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"predictions",
+								"{{predictionId}}"
+							]
+						},
+						"description": "Deletes an existing prediction."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/health",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"health"
+					]
+				},
+				"description": "Checks that the server is running. Success response: { status: 'ok' }."
+			},
+			"response": [
+				{
+					"name": "Health Check",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"health"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "http://localhost:5500"
+						},
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "63"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"3f-aVXaDUsCPC0LdskD9xwl6EF07WI\""
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 29 Jun 2026 21:48:38 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"ok\",\n    \"message\": \"World Cup Prediction API is running\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Leaderboard",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/leaderboard",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"leaderboard"
+					]
+				},
+				"description": "Complex aggregation query: calculates users ordered by prediction confidence points."
+			},
+			"response": [
+				{
+					"name": "Success - Leaderboard",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/leaderboard",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"leaderboard"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "http://localhost:5500"
+						},
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "285"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"11d-Hg9urCTqmnccahKmEzJz2gqzPlw\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 30 Jun 2026 07:40:52 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"users\": [\n        {\n            \"id\": \"6a42ce78a52983b5e5e44789\",\n            \"username\": \"baseltest\",\n            \"points\": 15,\n            \"predictionsCount\": 2\n        },\n        {\n            \"id\": \"6a42d73f8f83172340e5e010\",\n            \"username\": \"frontendtest\",\n            \"points\": 10,\n            \"predictionsCount\": 2\n        },\n        {\n            \"id\": \"6a42e8ac8f83172340e5e04c\",\n            \"username\": \"postmantest\",\n            \"points\": 7,\n            \"predictionsCount\": 1\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "External API - Country Info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/external/country/Mexico",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"external",
+						"country",
+						"Mexico"
+					]
+				},
+				"description": "Uses an external public API through the backend to return country/team information."
+			},
+			"response": [
+				{
+					"name": "Error - External Country Inot found",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/external/country/Mexico",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"external",
+								"country",
+								"Mexico"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "http://localhost:5500"
+						},
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "62"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"3e-PBUUp/JVNlxAtGP4LPa6GFHloXc\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 30 Jun 2026 07:44:26 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"Country information not found from external API.\"\n}"
+				},
+				{
+					"name": "Success - External API - Japan Info",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/external/country/Japan",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"external",
+								"country",
+								"Japan"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "http://localhost:5500"
+						},
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "154"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"9a-doc36w/Ba82BR4NPIZe7qOnLgc0\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 30 Jun 2026 08:02:48 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"name\": \"Japan\",\n    \"country\": \"Japan\",\n    \"countryCode\": \"JP\",\n    \"timezone\": \"Asia/Tokyo\",\n    \"latitude\": 35.68536,\n    \"longitude\": 139.7531,\n    \"source\": \"Open-Meteo Geocoding API\"\n}"
+				}
+			]
+		},
+		{
+			"name": "{{baseUrl}}/api/health",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/health",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"health"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success - {{baseUrl}}/api/health",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"health"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "http://localhost:5500"
+						},
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "63"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"3f-aVXaDUsCPC0LdskD9xwl6EF07WI\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 30 Jun 2026 08:14:43 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"ok\",\n    \"message\": \"World Cup Prediction API is running\"\n}"
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQyZThhYzhmODMxNzIzNDBlNWUwNGMiLCJpYXQiOjE3ODI4MDQ3MDksImV4cCI6MTc4MzQwOTUwOX0.KF28o9VURj3IQgzEQJjuF8svSUT9o7laa0IOSgU4HhQ",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5000"
+		},
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "matchId",
+			"value": ""
+		},
+		{
+			"key": "predictionId",
+			"value": ""
+		}
+	]
 }
