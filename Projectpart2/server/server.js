@@ -31,6 +31,12 @@ app.use('/api/predictions', predictionRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/external', externalRoutes);
 
+app.use('/api', (req, res) => {
+    res.status(404).json({
+        message: 'API route not found'
+    });
+});
+
 const clientPath = path.join(__dirname, '..', 'client');
 app.use(express.static(clientPath));
 app.get('*', (req, res) => {
