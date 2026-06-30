@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "f1c7c4a1-2945-4582-a2c5-1b60d8fbc930",
 		"name": "World Cup Prediction API",
-		"description": "Postman collection for Project Part B. Set baseUrl to [http://localhost:5000](http://localhost:5000) and token after login/register.\n\n## Flow 1: New User Prediction Flow\n\n1. Register a new user using POST /api/auth/register.\n    \n2. Login using POST /api/auth/login and copy the JWT token.\n    \n3. Fetch available matches using GET /api/matches.\n    \n4. Save one match ID into the matchId collection variable.\n    \n5. Create a prediction using POST /api/predictions.\n    \n6. Verify the prediction using GET /api/predictions/mine.\n    \n7. Check that the leaderboard updates using GET /api/leaderboard.\n    \n\n### This flow proves:\n\n- User management\n    \n- Authentication\n    \n- Read matches from DB\n    \n- Create prediction\n    \n- Fetch by logged-in user\n    \n- Leaderboard/statistics\n    \n\n## Flow 2: Manage Prediction Flow\n\n1. Login using POST /api/auth/login.\n    \n2. Fetch user predictions using GET /api/predictions/mine.\n    \n3. Save one prediction ID into the predictionId collection variable.\n    \n4. Update the prediction using PUT /api/predictions/{{predictionId}}.\n    \n5. Verify the updated prediction using GET /api/predictions/mine.\n    \n6. Delete the prediction using DELETE /api/predictions/{{predictionId}}.\n    \n7. Verify deletion using GET /api/predictions/mine.\n    \n\n### This flow proves:\n\n- StartFragmentRead\n    \n- Update\n    \n- Delete\n    \n- Protected routes\n    \n- User-specific data\n    \n- Relation between prediction and matchEndFragment\n    \n\n## External API Flow\n\nThe Featured Matches page calls GET /api/external/country/:name through the backend.  \nThe backend uses the Open-Meteo Geocoding API to return capital/city location, country code, timezone, latitude, and longitude.  \nExample:\n\nGET /api/external/country/Mexico",
+		"description": "Postman collection for Project Part B. Set baseUrl to [https://webandcloud.onrender.comEndFragment](https://webandcloud.onrender.comEndFragment)  \nand token after login/register.\n\n## Flow 1: New User Prediction Flow\n\n1. Register a new user using POST /api/auth/register.\n    \n2. Login using POST /api/auth/login and copy the JWT token.\n    \n3. Fetch available matches using GET /api/matches.\n    \n4. Save one match ID into the matchId collection variable.\n    \n5. Create a prediction using POST /api/predictions.\n    \n6. Verify the prediction using GET /api/predictions/mine.\n    \n7. Check that the leaderboard updates using GET /api/leaderboard.\n    \n\n### This flow proves:\n\n- User management\n    \n- Authentication\n    \n- Read matches from DB\n    \n- Create prediction\n    \n- Fetch by logged-in user\n    \n- Leaderboard/statistics\n    \n\n## Flow 2: Manage Prediction Flow\n\n1. Login using POST /api/auth/login.\n    \n2. Fetch user predictions using GET /api/predictions/mine.\n    \n3. Save one prediction ID into the predictionId collection variable.\n    \n4. Update the prediction using PUT /api/predictions/{{predictionId}}.\n    \n5. Verify the updated prediction using GET /api/predictions/mine.\n    \n6. Delete the prediction using DELETE /api/predictions/{{predictionId}}.\n    \n7. Verify deletion using GET /api/predictions/mine.\n    \n\n### This flow proves:\n\n- StartFragmentRead\n    \n- Update\n    \n- Delete\n    \n- Protected routes\n    \n- User-specific data\n    \n- Relation between prediction and matchEndFragment\n    \n\n## External API Flow\n\nThe Featured Matches page calls GET /api/external/country/:name through the backend.  \nThe backend uses the Open-Meteo Geocoding API to return capital/city location, country code, timezone, latitude, and longitude.  \nExample:\n\nGET /api/external/country/Mexico",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "41761358",
 		"_collection_link": "https://www.postman.com/cryosat-candidate-24289712/workspace/my-workspace/collection/41761358-f1c7c4a1-2945-4582-a2c5-1b60d8fbc930?action=share&source=collection_link&creator=41761358"
@@ -54,10 +54,12 @@
 									"raw": "{\n  \"username\": \"postmantest\",\n  \"email\": \"postmantest1@test.com\",\n  \"password\": \"12345678\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/auth/register",
+									"raw": "http://localhost:5000/api/auth/register",
+									"protocol": "http",
 									"host": [
-										"{{baseUrl}}"
+										"localhost"
 									],
+									"port": "5000",
 									"path": [
 										"api",
 										"auth",
@@ -232,10 +234,12 @@
 									"raw": "{\n  \"email\": \"postmantest1@test.com\",\n  \"password\": \"12345678\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/auth/login",
+									"raw": "http://localhost:5000/api/auth/login",
+									"protocol": "http",
 									"host": [
-										"{{baseUrl}}"
+										"localhost"
 									],
+									"port": "5000",
 									"path": [
 										"api",
 										"auth",
@@ -494,7 +498,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer {{token}}"
+										"value": "Bearer "
 									}
 								],
 								"body": {
@@ -507,10 +511,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/auth/me",
+									"raw": "http://localhost:5000/api/auth/me",
+									"protocol": "http",
 									"host": [
-										"{{baseUrl}}"
+										"localhost"
 									],
+									"port": "5000",
 									"path": [
 										"api",
 										"auth",
@@ -613,10 +619,12 @@
 									"raw": "{\n  \"username\": \"postmantest\",\n  \"email\": \"postmantest1@test.com\",\n  \"password\": \"12345678\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/auth/register",
+									"raw": "http://localhost:5000/api/auth/register",
+									"protocol": "http",
 									"host": [
-										"{{baseUrl}}"
+										"localhost"
 									],
+									"port": "5000",
 									"path": [
 										"api",
 										"auth",
@@ -719,10 +727,12 @@
 									"raw": "{\n  \"email\": \"postmantest1@test.com\",\n  \"password\": \"12345678\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/auth/login",
+									"raw": "http://localhost:5000/api/auth/login",
+									"protocol": "http",
 									"host": [
-										"{{baseUrl}}"
+										"localhost"
 									],
+									"port": "5000",
 									"path": [
 										"api",
 										"auth",
@@ -809,10 +819,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/matches",
+									"raw": "http://localhost:5000/api/matches",
+									"protocol": "http",
 									"host": [
-										"{{baseUrl}}"
+										"localhost"
 									],
+									"port": "5000",
 									"path": [
 										"api",
 										"matches"
@@ -899,10 +911,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/matches?team=Mexico",
+									"raw": "http://localhost:5000/api/matches?team=Mexico",
+									"protocol": "http",
 									"host": [
-										"{{baseUrl}}"
+										"localhost"
 									],
+									"port": "5000",
 									"path": [
 										"api",
 										"matches"
@@ -995,10 +1009,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/matches?status=upcoming",
+									"raw": "http://localhost:5000/api/matches?status=upcoming",
+									"protocol": "http",
 									"host": [
-										"{{baseUrl}}"
+										"localhost"
 									],
+									"port": "5000",
 									"path": [
 										"api",
 										"matches"
@@ -1086,14 +1102,16 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/matches/{{matchId}}",
+									"raw": "http://localhost:5000/api/matches/",
+									"protocol": "http",
 									"host": [
-										"{{baseUrl}}"
+										"localhost"
 									],
+									"port": "5000",
 									"path": [
 										"api",
 										"matches",
-										"{{matchId}}"
+										""
 									]
 								}
 							},
@@ -1194,18 +1212,20 @@
 									},
 									{
 										"key": "Authorization",
-										"value": "Bearer {{token}}"
+										"value": "Bearer "
 									}
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"matchId\": \"{{matchId}}\",\n  \"selectedResult\": \"home\",\n  \"confidencePoints\": 5\n}"
+									"raw": "{\n  \"matchId\": \"\",\n  \"selectedResult\": \"home\",\n  \"confidencePoints\": 5\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/predictions",
+									"raw": "http://localhost:5000/api/predictions",
+									"protocol": "http",
 									"host": [
-										"{{baseUrl}}"
+										"localhost"
 									],
+									"port": "5000",
 									"path": [
 										"api",
 										"predictions"
@@ -1370,14 +1390,16 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer {{token}}"
+										"value": "Bearer "
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/api/predictions/mine",
+									"raw": "http://localhost:5000/api/predictions/mine",
+									"protocol": "http",
 									"host": [
-										"{{baseUrl}}"
+										"localhost"
 									],
+									"port": "5000",
 									"path": [
 										"api",
 										"predictions",
@@ -1893,6 +1915,100 @@
 					],
 					"cookie": [],
 					"body": "{\n    \"name\": \"Japan\",\n    \"country\": \"Japan\",\n    \"countryCode\": \"JP\",\n    \"timezone\": \"Asia/Tokyo\",\n    \"latitude\": 35.68536,\n    \"longitude\": 139.7531,\n    \"source\": \"Open-Meteo Geocoding API\"\n}"
+				},
+				{
+					"name": "External API - Country Info",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/external/country/Spain",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"external",
+								"country",
+								"Spain"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 30 Jun 2026 09:50:04 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "136"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "access-control-allow-credentials",
+							"value": "true"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "http://world-cup-prediction-app.onrender.com"
+						},
+						{
+							"key": "Content-Encoding",
+							"value": "br"
+						},
+						{
+							"key": "etag",
+							"value": "W/\"b0-AlvPZFx5gnmgz+M9Y+DYcZus5J8\""
+						},
+						{
+							"key": "rndr-id",
+							"value": "8260be20-96cd-4c1b"
+						},
+						{
+							"key": "Server",
+							"value": "cloudflare"
+						},
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "Express"
+						},
+						{
+							"key": "x-render-origin-server",
+							"value": "Render"
+						},
+						{
+							"key": "cf-cache-status",
+							"value": "DYNAMIC"
+						},
+						{
+							"key": "CF-RAY",
+							"value": "a13c43b45bc67d98-TLV"
+						},
+						{
+							"key": "alt-svc",
+							"value": "h3=\":443\"; ma=86400"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"country\": \"Spain\",\n    \"capital\": \"Madrid\",\n    \"city\": \"Madrid\",\n    \"countryCode\": \"ES\",\n    \"timezone\": \"Europe/Madrid\",\n    \"latitude\": 40.4165,\n    \"longitude\": -3.70256,\n    \"source\": \"Open-Meteo Geocoding API\"\n}"
 				}
 			]
 		},
@@ -2018,7 +2134,7 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "http://localhost:5000"
+			"value": "https://webandcloud.onrender.com"
 		},
 		{
 			"key": "token",
