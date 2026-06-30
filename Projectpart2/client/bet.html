@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Prediction</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div class="mobile-container">
+        <img src="./images/MenuButton.png" class="hamburger" alt="Menu" onclick="toggleMenu()">
+        <a href="leaderboard.html" class="header-icon" aria-label="Leaderboard">🏆</a>
+        <nav class="side-menu" id="sideMenu">
+            <a href="index.html">Home</a>
+            <a href="features.html">Featured Matches</a>
+            <a href="my-predictions.html">My Predictions</a>
+            <a href="leaderboard.html">Leaderboard</a>
+            <button type="button" onclick="logoutUser()">Logout</button>
+        </nav>
+
+        <div class="logo-area">
+            <a href="./index.html" class="logo-link" aria-label="Go to home page">
+                <img src="./images/logo.jpg" alt="FIFA World Cup logo">
+            </a>
+        </div>
+
+        <h1 class="page-title">Submit Prediction</h1>
+        <p class="page-subtitle">Choose a result and confidence points. No money, no betting.</p>
+        <div id="messageBox" class="message"></div>
+
+        <div class="carousel-wrapper">
+            <div class="grey-card" id="predictionCard"></div>
+        </div>
+
+        <div class="bet-bottom-buttons">
+            <button class="btn-cancel" onclick="window.location.href='features.html'">Back</button>
+            <button class="btn-place" onclick="submitPrediction()">Submit</button>
+        </div>
+
+        <div class="social-icons">
+            <a href="https://www.instagram.com/fifaworldcup" target="_blank" rel="noopener noreferrer"><img src="./images/instagram.svg" alt="Instagram"></a>
+            <a href="https://twitter.com/FIFAWorldCup" target="_blank" rel="noopener noreferrer"><img src="./images/twitter.svg" alt="Twitter"></a>
+            <a href="https://www.facebook.com/fifaworldcup" target="_blank" rel="noopener noreferrer"><img src="./images/facebook.svg" alt="Facebook"></a>
+        </div>
+    </div>
+
+    <script src="./js/api.js"></script>
+    <script src="./js/menu.js"></script>
+    <script src="./js/prediction.js"></script>
+</body>
+</html>
