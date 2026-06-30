@@ -15,7 +15,7 @@ http://localhost:5000
 Deployed version:
 
 ```text
-ADD_RENDER_LINK_HERE
+https://webandcloud.onrender.com/
 ```
 
 Important note: the project is deployed on Render free tier. The first request may take around 50 seconds if the server is sleeping.
